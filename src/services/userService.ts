@@ -1,14 +1,11 @@
 import { useQuery, useMutation, useQueryClient } from '@tanstack/react-query'
-import type { IEcommerceAdapter } from './adapters/interface'
-import { createShopifyAdapter } from './adapters/shopify'
+import { adapter } from './adapters/factory'
 import type {
   CustomerCreateInput,
   CustomerUpdateInput,
   MailingAddressInput,
   AuthState,
 } from '@/types'
-
-const adapter: IEcommerceAdapter = createShopifyAdapter()
 
 const ACCESS_TOKEN_STORAGE_KEY = 'customer_access_token'
 const ACCESS_TOKEN_EXPIRES_AT_STORAGE_KEY = 'customer_access_token_expires_at'

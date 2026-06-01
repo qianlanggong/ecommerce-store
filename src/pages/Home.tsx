@@ -4,6 +4,7 @@ import { ArrowRight, ShoppingBag, Sparkles, Zap, Gift } from 'lucide-react'
 import { useProducts, useCollections } from '@/services/productService'
 import { ProductCard } from '@/components/product/ProductCard'
 import { useLocale } from '@/hooks/useLocale'
+import { cn } from '@/lib/utils'
 
 export default function Home() {
   const { t } = useTranslation('home')
@@ -277,8 +278,4 @@ export default function Home() {
       </section>
     </div>
   )
-}
-
-function cn(...classes: (string | undefined)[]) {
-  return classes.filter(Boolean).join(' ')
 }

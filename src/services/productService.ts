@@ -1,9 +1,6 @@
 import { useQuery, useQueryClient } from '@tanstack/react-query'
-import type { IEcommerceAdapter } from './adapters/interface'
-import { createMockAdapter } from './adapters/mock'
+import { adapter } from './adapters/factory'
 import type { ProductFilter } from '@/types'
-
-const adapter: IEcommerceAdapter = createMockAdapter()
 
 export const productKeys = {
   all: ['products'] as const,

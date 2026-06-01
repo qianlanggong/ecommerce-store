@@ -1,9 +1,6 @@
 import { useQuery, useMutation, useQueryClient } from '@tanstack/react-query'
-import type { IEcommerceAdapter } from './adapters/interface'
-import { createShopifyAdapter } from './adapters/shopify'
+import { adapter } from './adapters/factory'
 import type { CartInput, CartLineInput, CartLineUpdateInput } from '@/types'
-
-const adapter: IEcommerceAdapter = createShopifyAdapter()
 
 const CART_ID_STORAGE_KEY = 'cart_id'
 
