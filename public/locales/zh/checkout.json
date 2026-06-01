@@ -1,0 +1,75 @@
+{
+  "title": "结算",
+  "steps": {
+    "information": "填写信息",
+    "shipping": "配送方式",
+    "payment": "支付方式",
+    "confirmation": "订单确认"
+  },
+  "contact": {
+    "title": "联系信息",
+    "email": "邮箱",
+    "emailPlaceholder": "you@example.com",
+    "newsletter": "订阅最新资讯和优惠信息"
+  },
+  "shippingAddress": {
+    "title": "收货地址",
+    "sameAsBilling": "账单地址与收货地址相同",
+    "saveAddress": "保存此信息以便下次使用"
+  },
+  "billingAddress": {
+    "title": "账单地址"
+  },
+  "shippingMethod": {
+    "title": "配送方式",
+    "standard": "标准配送",
+    "express": "加急配送",
+    "free": "免费配送",
+    "estimatedDelivery": "预计送达：{{from}} - {{to}} 天"
+  },
+  "payment": {
+    "title": "支付方式",
+    "method": "选择支付方式",
+    "card": {
+      "title": "信用卡/借记卡",
+      "name": "持卡人姓名",
+      "number": "卡号",
+      "expiry": "有效期",
+      "cvv": "CVV 安全码",
+      "secureMessage": "所有交易均经过安全加密处理。"
+    },
+    "paypal": {
+      "title": "PayPal",
+      "description": "您将被重定向到 PayPal 安全地完成支付。"
+    },
+    "applePay": {
+      "title": "Apple Pay"
+    },
+    "googlePay": {
+      "title": "Google Pay"
+    }
+  },
+  "orderSummary": {
+    "title": "订单摘要",
+    "subtotal": "商品小计",
+    "shipping": "运费",
+    "tax": "税费",
+    "discount": "优惠",
+    "total": "应付总额",
+    "placeOrder": "提交订单",
+    "processing": "处理中..."
+  },
+  "success": {
+    "title": "感谢您的订购！",
+    "description": "您的订单已成功提交。",
+    "orderNumber": "订单号：{{number}}",
+    "confirmationEmail": "确认邮件已发送至 {{email}}。",
+    "continueShopping": "继续购物",
+    "viewOrder": "查看订单详情"
+  },
+  "errors": {
+    "paymentFailed": "支付失败，请重试。",
+    "invalidAddress": "请检查您的收货地址。",
+    "outOfStock": "部分商品已缺货，请检查购物车。"
+  }
+}

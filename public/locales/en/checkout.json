@@ -1,0 +1,75 @@
+{
+  "title": "Checkout",
+  "steps": {
+    "information": "Information",
+    "shipping": "Shipping",
+    "payment": "Payment",
+    "confirmation": "Confirmation"
+  },
+  "contact": {
+    "title": "Contact Information",
+    "email": "Email",
+    "emailPlaceholder": "you@example.com",
+    "newsletter": "Email me with news and offers"
+  },
+  "shippingAddress": {
+    "title": "Shipping Address",
+    "sameAsBilling": "Same as shipping address",
+    "saveAddress": "Save this information for next time"
+  },
+  "billingAddress": {
+    "title": "Billing Address"
+  },
+  "shippingMethod": {
+    "title": "Shipping Method",
+    "standard": "Standard Shipping",
+    "express": "Express Shipping",
+    "free": "Free Shipping",
+    "estimatedDelivery": "Estimated delivery: {{from}} - {{to}} days"
+  },
+  "payment": {
+    "title": "Payment",
+    "method": "Payment Method",
+    "card": {
+      "title": "Credit / Debit Card",
+      "name": "Name on card",
+      "number": "Card number",
+      "expiry": "Expiry date",
+      "cvv": "CVV",
+      "secureMessage": "All transactions are secure and encrypted."
+    },
+    "paypal": {
+      "title": "PayPal",
+      "description": "You will be redirected to PayPal to complete your purchase securely."
+    },
+    "applePay": {
+      "title": "Apple Pay"
+    },
+    "googlePay": {
+      "title": "Google Pay"
+    }
+  },
+  "orderSummary": {
+    "title": "Order Summary",
+    "subtotal": "Subtotal",
+    "shipping": "Shipping",
+    "tax": "Tax",
+    "discount": "Discount",
+    "total": "Total",
+    "placeOrder": "Place Order",
+    "processing": "Processing..."
+  },
+  "success": {
+    "title": "Thank you for your order!",
+    "description": "Your order has been placed successfully.",
+    "orderNumber": "Order number: {{number}}",
+    "confirmationEmail": "A confirmation email has been sent to {{email}}.",
+    "continueShopping": "Continue Shopping",
+    "viewOrder": "View Order Details"
+  },
+  "errors": {
+    "paymentFailed": "Payment failed. Please try again.",
+    "invalidAddress": "Please check your shipping address.",
+    "outOfStock": "Some items are no longer in stock. Please review your cart."
+  }
+}
