@@ -74,5 +74,14 @@
     "rating": "评分最高",
     "clearAll": "清除全部",
     "apply": "应用筛选"
-  }
+  },
+  "myFavorites": "我的收藏",
+  "favoritesCount": "已收藏 {{count}} 件商品",
+  "noFavorites": "暂无收藏",
+  "noFavoritesDescription": "开始探索，把您喜欢的商品添加到收藏列表中。",
+  "browseProducts": "浏览商品",
+  "clearFavoritesConfirm": "确定要清空收藏列表吗？",
+  "readyToShop": "准备好购物了吗？",
+  "readyToShopDescription": "您收藏的商品正等着您。继续购物，发现更多精彩商品。",
+  "continueShopping": "继续购物"
 }

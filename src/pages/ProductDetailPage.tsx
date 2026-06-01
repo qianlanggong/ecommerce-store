@@ -1,4 +1,4 @@
-import { useState, useMemo } from 'react'
+import { useState, useMemo, useCallback } from 'react'
 import { useParams, Link } from 'react-router-dom'
 import { useTranslation } from 'react-i18next'
 import {
@@ -19,8 +19,11 @@ import {
   useProductRecommendations,
   usePrefetchProduct,
 } from '@/services/productService'
+import { useAddCartLines } from '@/services/cartService'
 import { ProductCard } from '@/components/product/ProductCard'
 import { useLocale } from '@/hooks/useLocale'
+import { useFavoritesStore } from '@/stores'
+import { MAX_CART_QUANTITY, MIN_CART_QUANTITY } from '@/lib/constants'
 import {
   cn,
   getProductDisplayPrice,
@@ -37,10 +40,17 @@ export default function ProductDetailPage() {
   const [selectedImageIndex, setSelectedImageIndex] = useState(0)
   const [quantity, setQuantity] = useState(1)
   const [selectedOptions, setSelectedOptions] = useState<Record<string, string>>({})
-  const [isFavorite, setIsFavorite] = useState(false)
+  const [showAddedMessage, setShowAddedMessage] = useState(false)
+  const addCartLines = useAddCartLines()
+  const toggleFavorite = useFavoritesStore((state) => state.toggleFavorite)
 
   const { data: product, isLoading, error } = useProduct(handle || '')
   const prefetchProduct = usePrefetchProduct()
+
+  const isFavorite = useMemo(() => {
+    if (!product) return false
+    return useFavoritesStore.getState().isFavorite(product.id)
+  }, [product])
 
   const images = useMemo(() => {
     return product?.images.edges.map((edge) => edge.node) || []
@@ -93,28 +103,46 @@ export default function ProductDetailPage() {
     setQuantity(1)
   }
 
-  const handleAddToCart = () => {
+  const handleAddToCart = useCallback(() => {
     if (!product || !selectedVariant) return
-    console.log('Add to cart:', {
-      productId: product.id,
-      variantId: selectedVariant.id,
-      quantity,
-    })
-  }
 
-  const handleBuyNow = () => {
+    addCartLines.mutate(
+      [{ merchandiseId: selectedVariant.id, quantity }],
+      {
+        onSuccess: () => {
+          setShowAddedMessage(true)
+          setTimeout(() => setShowAddedMessage(false), 2000)
+        },
+      },
+    )
+  }, [product, selectedVariant, quantity, addCartLines])
+
+  const handleBuyNow = useCallback(() => {
     if (!product || !selectedVariant) return
-    console.log('Buy now:', {
-      productId: product.id,
-      variantId: selectedVariant.id,
-      quantity,
-    })
-  }
+
+    addCartLines.mutate(
+      [{ merchandiseId: selectedVariant.id, quantity }],
+      {
+        onSuccess: (cart) => {
+          if (cart.checkoutUrl) {
+            window.location.href = cart.checkoutUrl
+          }
+        },
+      },
+    )
+  }, [product, selectedVariant, quantity, addCartLines])
+
+  const handleToggleFavorite = useCallback(() => {
+    if (!product) return
+    toggleFavorite(product.id)
+  }, [product, toggleFavorite])
 
   const isOptionAvailable = (optionName: string, value: string): boolean => {
     const testOptions = { ...selectedOptions, [optionName]: value }
     return variants.some((variant) =>
-      variant.selectedOptions.every((opt) => testOptions[opt.name] === opt.value),
+      variant.selectedOptions.every(
+        (opt) => testOptions[opt.name] === undefined || testOptions[opt.name] === opt.value,
+      ),
     )
   }
 
@@ -318,7 +346,7 @@ export default function ProductDetailPage() {
               <div className="border-gold/30 bg-cream shadow-subtle flex items-center overflow-hidden rounded-2xl border-2">
                 <button
                   type="button"
-                  onClick={() => setQuantity((prev) => Math.max(1, prev - 1))}
+                  onClick={() => setQuantity((prev) => Math.max(MIN_CART_QUANTITY, prev - 1))}
                   className="text-charcoal hover:bg-gold/10 hover:text-primary flex h-14 w-14 items-center justify-center transition-all duration-300"
                   aria-label={t('decreaseQuantity')}
                 >
@@ -329,7 +357,7 @@ export default function ProductDetailPage() {
                 </span>
                 <button
                   type="button"
-                  onClick={() => setQuantity((prev) => Math.min(99, prev + 1))}
+                  onClick={() => setQuantity((prev) => Math.min(MAX_CART_QUANTITY, prev + 1))}
                   className="text-charcoal hover:bg-gold/10 hover:text-primary flex h-14 w-14 items-center justify-center transition-all duration-300"
                   aria-label={t('increaseQuantity')}
                 >
@@ -363,19 +391,28 @@ export default function ProductDetailPage() {
             <button
               type="button"
               onClick={handleAddToCart}
-              disabled={!selectedVariant?.availableForSale}
+              disabled={!selectedVariant?.availableForSale || addCartLines.isPending}
               className="group bg-gradient-gold font-display text-cream shadow-luxury hover:shadow-luxury-hover flex flex-1 items-center justify-center gap-3 rounded-2xl px-8 py-4.5 text-lg font-semibold transition-all duration-300 hover:-translate-y-1 disabled:cursor-not-allowed disabled:opacity-50"
             >
-              <ShoppingCart
-                size={22}
-                className="transition-transform duration-300 group-hover:scale-110"
-              />
-              {t('addToCart')}
+              {showAddedMessage ? (
+                <>
+                  <Check size={22} />
+                  {t('addSuccess')}
+                </>
+              ) : (
+                <>
+                  <ShoppingCart
+                    size={22}
+                    className="transition-transform duration-300 group-hover:scale-110"
+                  />
+                  {t('addToCart')}
+                </>
+              )}
             </button>
             <button
               type="button"
               onClick={handleBuyNow}
-              disabled={!selectedVariant?.availableForSale}
+              disabled={!selectedVariant?.availableForSale || addCartLines.isPending}
               className="group border-primary bg-cream font-display text-primary shadow-subtle hover:bg-primary/5 hover:shadow-luxury flex flex-1 items-center justify-center gap-3 rounded-2xl border-2 px-8 py-4.5 text-lg font-semibold transition-all duration-300 hover:-translate-y-1 disabled:cursor-not-allowed disabled:opacity-50"
             >
               {t('buyNow')}
@@ -383,7 +420,7 @@ export default function ProductDetailPage() {
             <div className="flex gap-3 sm:flex-col">
               <button
                 type="button"
-                onClick={() => setIsFavorite(!isFavorite)}
+                onClick={handleToggleFavorite}
                 className={cn(
                   'group border-gold/30 bg-cream shadow-subtle hover:border-wine/50 hover:bg-wine/10 hover:shadow-luxury flex h-14 w-14 items-center justify-center rounded-2xl border-2 transition-all duration-300',
                   isFavorite ? 'text-wine' : 'text-charcoal/60',

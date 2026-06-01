@@ -67,7 +67,9 @@
     "storeDescription": "Discover amazing products at great prices. Shop the latest trends with fast shipping and easy returns.",
     "allRightsReserved": "All rights reserved.",
     "openMenu": "Open menu",
-    "closeMenu": "Close menu"
+    "closeMenu": "Close menu",
+    "searchPlaceholder": "Search products...",
+    "clearSearch": "Clear search"
   },
   "support": {
     "contactUs": "Contact Us",

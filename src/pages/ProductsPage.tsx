@@ -1,9 +1,9 @@
-import { useState, useMemo } from 'react'
+import { useState, useMemo, useCallback, useRef, useEffect } from 'react'
 import { useTranslation } from 'react-i18next'
-import { Filter, Grid3X3, List, SlidersHorizontal } from 'lucide-react'
+import { Filter, Grid3X3, List, SlidersHorizontal, Search, X } from 'lucide-react'
 import { useProducts, useCollections } from '@/services/productService'
 import { ProductCard } from '@/components/product/ProductCard'
-import { cn } from '@/lib/utils'
+import { cn, debounce } from '@/lib/utils'
 import type { ProductFilter } from '@/types'
 
 type ViewMode = 'grid' | 'list'
@@ -12,6 +12,7 @@ export default function ProductsPage() {
   const { t } = useTranslation('product')
   const [viewMode, setViewMode] = useState<ViewMode>('grid')
   const [showFilters, setShowFilters] = useState(false)
+  const [searchQuery, setSearchQuery] = useState('')
   const [filter, setFilter] = useState<ProductFilter>({
     first: 12,
     sortKey: 'RELEVANCE',
@@ -23,12 +24,34 @@ export default function ProductsPage() {
   const { data: collectionsData } = useCollections()
 
   const products = useMemo(() => {
-    return productsData?.edges.map((edge) => edge.node) || []
-  }, [productsData])
+    const allProducts = productsData?.edges.map((edge) => edge.node) || []
+    if (!searchQuery.trim()) return allProducts
+    const query = searchQuery.toLowerCase().trim()
+    return allProducts.filter(
+      (product) =>
+        product.title.toLowerCase().includes(query) ||
+        product.description.toLowerCase().includes(query) ||
+        product.productType.toLowerCase().includes(query) ||
+        product.vendor.toLowerCase().includes(query) ||
+        product.tags.some((tag) => tag.toLowerCase().includes(query)),
+    )
+  }, [productsData, searchQuery])
 
   const collections = useMemo(() => {
     return collectionsData?.edges.map((edge) => edge.node) || []
   }, [collectionsData])
+
+  const debouncedSearchRef = useRef<((query: string) => void) | null>(null)
+
+  useEffect(() => {
+    debouncedSearchRef.current = debounce((query: string) => {
+      setSearchQuery(query)
+    }, 300)
+  }, [])
+
+  const handleSearch = useCallback((query: string) => {
+    debouncedSearchRef.current?.(query)
+  }, [])
 
   const handleSortChange = (sortKey: NonNullable<ProductFilter['sortKey']>) => {
     setFilter((prev) => ({ ...prev, sortKey }))
@@ -58,6 +81,33 @@ export default function ProductsPage() {
         <p className="font-body text-muted-foreground mt-3 text-lg">
           {t('productsFound', { count: products.length })}
         </p>
+      </div>
+
+      <div className="animate-fade-in-up stagger-1 mb-8">
+        <div className="border-luxury bg-white shadow-luxury relative overflow-hidden rounded-2xl">
+          <Search className="text-muted-foreground absolute top-1/2 left-5 -translate-y-1/2" size={22} />
+          <input
+            type="text"
+            placeholder={t('searchPlaceholder', { ns: 'common' })}
+            defaultValue={searchQuery}
+            onChange={(e) => handleSearch(e.target.value)}
+            className="font-body text-charcoal placeholder:text-muted-foreground w-full bg-transparent py-4 pl-14 pr-14 text-base focus:outline-none"
+          />
+          {searchQuery && (
+            <button
+              type="button"
+              onClick={() => {
+                setSearchQuery('')
+                const input = document.querySelector<HTMLInputElement>('input[type="text"]')
+                if (input) input.value = ''
+              }}
+              className="text-muted-foreground hover:text-charcoal absolute top-1/2 right-5 -translate-y-1/2 rounded-full p-1 transition-colors"
+              aria-label={t('clearSearch', { ns: 'common' })}
+            >
+              <X size={20} />
+            </button>
+          )}
+        </div>
       </div>
 
       <div className="flex flex-col gap-8 lg:flex-row">

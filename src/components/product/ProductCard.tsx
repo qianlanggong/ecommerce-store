@@ -1,9 +1,11 @@
-import { useState } from 'react'
+import { useState, useCallback } from 'react'
 import { Link } from 'react-router-dom'
-import { ShoppingCart, Heart, Eye } from 'lucide-react'
+import { ShoppingCart, Heart, Eye, Check } from 'lucide-react'
 import { useTranslation } from 'react-i18next'
 import type { Product } from '@/types'
 import { useLocale } from '@/hooks/useLocale'
+import { useFavoritesStore } from '@/stores'
+import { useAddCartLines } from '@/services/cartService'
 import { cn, getProductDisplayPrice, getDiscountPercent, isOnSale } from '@/lib/utils'
 
 interface ProductCardProps {
@@ -16,7 +18,10 @@ export function ProductCard({ product, className, index = 0 }: ProductCardProps)
   const { t } = useTranslation('product')
   const { locale, localizePath } = useLocale()
   const [isHovered, setIsHovered] = useState(false)
-  const [isFavorite, setIsFavorite] = useState(false)
+  const [showAddedMessage, setShowAddedMessage] = useState(false)
+  const isFavorite = useFavoritesStore((state) => state.isFavorite(product.id))
+  const toggleFavorite = useFavoritesStore((state) => state.toggleFavorite)
+  const addCartLines = useAddCartLines()
 
   const displayPrice = getProductDisplayPrice(product, locale === 'zh' ? 'zh-CN' : 'en-US')
   const firstVariant = product.variants.edges[0]?.node
@@ -26,17 +31,33 @@ export function ProductCard({ product, className, index = 0 }: ProductCardProps)
   const imageUrl = product.featuredImage?.url || product.images.edges[0]?.node.url
   const imageAlt = product.featuredImage?.altText || product.title
 
-  const handleAddToCart = (e: React.MouseEvent) => {
-    e.preventDefault()
-    e.stopPropagation()
-    console.log('Add to cart:', product.title)
-  }
+  const handleAddToCart = useCallback(
+    (e: React.MouseEvent) => {
+      e.preventDefault()
+      e.stopPropagation()
+      if (!firstVariant || !product.availableForSale) return
 
-  const handleToggleFavorite = (e: React.MouseEvent) => {
-    e.preventDefault()
-    e.stopPropagation()
-    setIsFavorite(!isFavorite)
-  }
+      addCartLines.mutate(
+        [{ merchandiseId: firstVariant.id, quantity: 1 }],
+        {
+          onSuccess: () => {
+            setShowAddedMessage(true)
+            setTimeout(() => setShowAddedMessage(false), 2000)
+          },
+        },
+      )
+    },
+    [firstVariant, product.availableForSale, addCartLines],
+  )
+
+  const handleToggleFavorite = useCallback(
+    (e: React.MouseEvent) => {
+      e.preventDefault()
+      e.stopPropagation()
+      toggleFavorite(product.id)
+    },
+    [product.id, toggleFavorite],
+  )
 
   const productUrl = localizePath(`/products/${product.handle}`)
   const staggerClass = `stagger-${(index % 8) + 1}`
@@ -108,11 +129,20 @@ export function ProductCard({ product, className, index = 0 }: ProductCardProps)
           <button
             type="button"
             onClick={handleAddToCart}
-            disabled={!product.availableForSale}
+            disabled={!product.availableForSale || addCartLines.isPending}
             className="font-body text-charcoal hover:bg-primary shadow-luxury flex flex-1 items-center justify-center gap-2 rounded-lg bg-white px-4 py-2.5 text-sm font-medium transition-all duration-300 hover:text-white disabled:cursor-not-allowed disabled:opacity-50"
           >
-            <ShoppingCart size={16} />
-            {t('addToCart')}
+            {showAddedMessage ? (
+              <>
+                <Check size={16} />
+                {t('addSuccess')}
+              </>
+            ) : (
+              <>
+                <ShoppingCart size={16} />
+                {t('addToCart')}
+              </>
+            )}
           </button>
           <Link
             to={productUrl}

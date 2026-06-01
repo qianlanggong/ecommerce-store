@@ -5,6 +5,7 @@ import { MainLayout } from '@/components/layout/MainLayout'
 import Home from '@/pages/Home'
 import ProductsPage from '@/pages/ProductsPage'
 import ProductDetailPage from '@/pages/ProductDetailPage'
+import FavoritesPage from '@/pages/FavoritesPage'
 
 function AppRoutes() {
   return (
@@ -31,6 +32,7 @@ function AppRoutes() {
           path="/:locale/account"
           element={<div className="p-8 text-center text-xl">Account Page - Coming Soon</div>}
         />
+        <Route path="/:locale/account/favorites" element={<FavoritesPage />} />
       </Routes>
     </MainLayout>
   )

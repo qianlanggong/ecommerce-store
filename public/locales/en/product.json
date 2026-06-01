@@ -74,5 +74,14 @@
     "rating": "Rating",
     "clearAll": "Clear All",
     "apply": "Apply Filters"
-  }
+  },
+  "myFavorites": "My Favorites",
+  "favoritesCount": "{{count}} items saved",
+  "noFavorites": "No favorites yet",
+  "noFavoritesDescription": "Start exploring and save items you love to your favorites list.",
+  "browseProducts": "Browse Products",
+  "clearFavoritesConfirm": "Are you sure you want to remove all items from your favorites?",
+  "readyToShop": "Ready to Shop?",
+  "readyToShopDescription": "Your favorite items are waiting. Continue shopping to discover more amazing products.",
+  "continueShopping": "Continue Shopping"
 }

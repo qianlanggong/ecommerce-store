@@ -20,11 +20,22 @@ Object.defineProperty(window, 'matchMedia', {
   }),
 })
 
-Storage.prototype.getItem = (key: string) => {
-  if (key === 'i18nextLng') return 'en'
-  return null
+let localStorageMock: Record<string, string> = {
+  i18nextLng: 'en',
 }
 
-Storage.prototype.setItem = () => {}
-Storage.prototype.removeItem = () => {}
-Storage.prototype.clear = () => {}
+Storage.prototype.getItem = (key: string) => {
+  return localStorageMock[key] ?? null
+}
+
+Storage.prototype.setItem = (key: string, value: string) => {
+  localStorageMock[key] = value
+}
+
+Storage.prototype.removeItem = (key: string) => {
+  delete localStorageMock[key]
+}
+
+Storage.prototype.clear = () => {
+  localStorageMock = { i18nextLng: 'en' }
+}

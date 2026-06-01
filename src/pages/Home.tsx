@@ -93,21 +93,7 @@ export default function Home() {
                 />
                 <div className="border-luxury pointer-events-none absolute inset-0 rounded-3xl" />
               </div>
-              <div className="shadow-luxury animate-float absolute -bottom-8 -left-8 hidden rounded-2xl bg-white p-5 lg:block">
-                <div className="flex items-center gap-4">
-                  <div className="bg-gradient-gold shadow-luxury flex h-14 w-14 items-center justify-center rounded-full text-white">
-                    <ShoppingBag size={24} />
-                  </div>
-                  <div>
-                    <div className="font-display text-charcoal text-base font-semibold">
-                      {t('satisfactionGuarantee')}
-                    </div>
-                    <div className="font-body text-muted-foreground text-xs">
-                      {t('satisfactionGuaranteeDescription')}
-                    </div>
-                  </div>
-                </div>
-              </div>
+
             </div>
           </div>
         </div>

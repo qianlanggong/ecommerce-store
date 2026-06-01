@@ -94,7 +94,8 @@ describe('utils', () => {
     it('合并类名并过滤假值', () => {
       expect(classNames('foo', 'bar')).toBe('foo bar')
       expect(classNames('foo', false, null, undefined, 'bar')).toBe('foo bar')
-      expect(classNames('foo', true && 'active')).toBe('foo active')
+      const condition = true
+      expect(classNames('foo', condition && 'active')).toBe('foo active')
     })
   })
 })

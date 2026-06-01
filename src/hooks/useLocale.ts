@@ -28,13 +28,13 @@ export function useLocale() {
   }, [currentLocale, i18n, storeLocale, setLocale])
 
   const changeLocale = useCallback(
-    (newLocale: Locale) => {
+    async (newLocale: Locale) => {
       if (!SUPPORTED_LOCALES.includes(newLocale)) return
 
       const newPath = changeLocaleInUrl(location.pathname, newLocale)
-      i18n.changeLanguage(newLocale)
+      await i18n.changeLanguage(newLocale)
       setLocale(newLocale)
-      navigate(newPath)
+      navigate(newPath, { replace: true })
     },
     [location.pathname, i18n, setLocale, navigate],
   )

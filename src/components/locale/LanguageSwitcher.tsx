@@ -9,8 +9,8 @@ const localeLabels: Record<Locale, string> = {
 export function LanguageSwitcher() {
   const { locale, changeLocale, supportedLocales } = useLocale()
 
-  const handleChange = (e: React.ChangeEvent<HTMLSelectElement>) => {
-    changeLocale(e.target.value as Locale)
+  const handleChange = async (e: React.ChangeEvent<HTMLSelectElement>) => {
+    await changeLocale(e.target.value as Locale)
   }
 
   return (
