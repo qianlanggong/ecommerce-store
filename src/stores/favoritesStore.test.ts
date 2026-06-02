@@ -1,5 +1,5 @@
 import { beforeEach, describe, expect, it, vi } from 'vitest'
-import { useFavoritesStore } from './favoritesStore'
+import { useFavoritesStore, validateFavoriteIds } from './favoritesStore'
 import { STORAGE_KEYS, FAVORITES_LIMIT } from '@/lib/constants'
 
 describe('favoritesStore', () => {
@@ -119,5 +119,112 @@ describe('favoritesStore', () => {
     useFavoritesStore.getState().removeFavorite('product-1')
     expect(getFavorites()).toEqual([])
     expect(getCount()).toBe(0)
+  })
+
+  describe('input validation', () => {
+    it('should ignore empty string productId', () => {
+      useFavoritesStore.getState().addFavorite('')
+      expect(getCount()).toBe(0)
+
+      useFavoritesStore.getState().toggleFavorite('')
+      expect(getCount()).toBe(0)
+
+      useFavoritesStore.getState().removeFavorite('')
+      expect(getCount()).toBe(0)
+
+      expect(useFavoritesStore.getState().isFavorite('')).toBe(false)
+    })
+
+    it('should ignore non-string productId', () => {
+      useFavoritesStore.getState().addFavorite(null as unknown as string)
+      expect(getCount()).toBe(0)
+
+      useFavoritesStore.getState().addFavorite(undefined as unknown as string)
+      expect(getCount()).toBe(0)
+
+      useFavoritesStore.getState().addFavorite(123 as unknown as string)
+      expect(getCount()).toBe(0)
+    })
+
+    it('should ignore whitespace-only productId', () => {
+      useFavoritesStore.getState().addFavorite('   ')
+      expect(getCount()).toBe(0)
+    })
+  })
+
+  describe('validateFavoriteIds function', () => {
+    it('should return empty array for non-array input', () => {
+      expect(validateFavoriteIds(null)).toEqual([])
+      expect(validateFavoriteIds(undefined)).toEqual([])
+      expect(validateFavoriteIds('not-an-array')).toEqual([])
+      expect(validateFavoriteIds(123)).toEqual([])
+      expect(validateFavoriteIds({})).toEqual([])
+    })
+
+    it('should filter out non-string values', () => {
+      const input = ['valid-id', 123, null, undefined, true, {}, [], 'another-valid']
+      const result = validateFavoriteIds(input)
+      expect(result).toContain('valid-id')
+      expect(result).toContain('another-valid')
+      expect(result).toHaveLength(2)
+    })
+
+    it('should filter out empty and whitespace-only strings', () => {
+      const input = ['valid-id', '', '   ', '\t', '\n', 'another-valid']
+      const result = validateFavoriteIds(input)
+      expect(result).toContain('valid-id')
+      expect(result).toContain('another-valid')
+      expect(result).toHaveLength(2)
+    })
+
+    it('should return valid string array as-is', () => {
+      const input = ['id-1', 'id-2', 'id-3']
+      const result = validateFavoriteIds(input)
+      expect(result).toEqual(input)
+      expect(result).toHaveLength(3)
+    })
+
+    it('should return empty array for empty input', () => {
+      expect(validateFavoriteIds([])).toEqual([])
+    })
+  })
+
+  describe('race condition handling', () => {
+    it('should handle rapid consecutive toggle calls correctly', () => {
+      const store = useFavoritesStore.getState()
+      
+      for (let i = 0; i < 10; i++) {
+        store.toggleFavorite('product-1')
+      }
+      
+      expect(getCount()).toBe(0)
+      expect(isFav('product-1')).toBe(false)
+    })
+
+    it('should handle rapid consecutive add calls correctly', () => {
+      const store = useFavoritesStore.getState()
+      
+      for (let i = 0; i < 10; i++) {
+        store.addFavorite('product-1')
+      }
+      
+      expect(getCount()).toBe(1)
+      expect(isFav('product-1')).toBe(true)
+    })
+
+    it('should handle mixed rapid add/remove calls correctly', () => {
+      const store = useFavoritesStore.getState()
+      
+      store.addFavorite('product-1')
+      store.addFavorite('product-2')
+      store.removeFavorite('product-1')
+      store.addFavorite('product-3')
+      store.removeFavorite('product-2')
+      
+      expect(getCount()).toBe(1)
+      expect(isFav('product-1')).toBe(false)
+      expect(isFav('product-2')).toBe(false)
+      expect(isFav('product-3')).toBe(true)
+    })
   })
 })

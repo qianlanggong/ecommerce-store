@@ -924,4 +924,8 @@ export function getMockCollection(handle: string): Collection | null {
   return mockCollections.find((c) => c.handle === handle) || null
 }
 
+export function getAllMockProducts(): Product[] {
+  return [...mockProducts]
+}
+
 export { mockProducts }

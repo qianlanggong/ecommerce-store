@@ -6,11 +6,20 @@ import { LanguageSwitcher } from '@/components/locale/LanguageSwitcher'
 import { useLocale } from '@/hooks/useLocale'
 import { NAVIGATION_ITEMS } from '@/lib/constants'
 import { cn } from '@/lib/utils'
+import { useCartStore } from '@/stores/cartStore'
+import { useCartActions } from '@/hooks/useCartActions'
 
 export function Header() {
   const { t } = useTranslation()
   const { localizePath } = useLocale()
   const [isMenuOpen, setIsMenuOpen] = useState(false)
+  const { openDrawer } = useCartStore()
+  const { totalQuantity } = useCartActions()
+
+  const handleCartClick = (e: React.MouseEvent) => {
+    e.preventDefault()
+    openDrawer()
+  }
 
   return (
     <header className="border-cream shadow-luxury sticky top-0 z-50 border-b bg-white/95 backdrop-blur-md">
@@ -49,16 +58,19 @@ export function Header() {
               <Search size={20} className="transition-transform group-hover:scale-110" />
             </button>
 
-            <Link
-              to={localizePath('/cart')}
+            <button
+              type="button"
+              onClick={handleCartClick}
               className="group text-charcoal hover:text-primary hover:bg-cream relative rounded-full p-3 transition-all"
               aria-label={t('title', { ns: 'cart' })}
             >
               <ShoppingCart size={20} className="transition-transform group-hover:scale-110" />
-              <span className="bg-gradient-gold shadow-luxury animate-scale-in absolute -top-1 -right-1 flex h-6 w-6 items-center justify-center rounded-full text-xs font-semibold text-white">
-                0
-              </span>
-            </Link>
+              {totalQuantity > 0 && (
+                <span className="bg-gradient-gold shadow-luxury animate-scale-in absolute -top-1 -right-1 flex h-6 min-w-6 items-center justify-center rounded-full px-1.5 text-xs font-semibold text-white">
+                  {totalQuantity > 99 ? '99+' : totalQuantity}
+                </span>
+              )}
+            </button>
 
             <Link
               to={localizePath('/account')}
@@ -104,6 +116,22 @@ export function Header() {
               </Link>
             ))}
             <div className="border-cream mt-4 flex items-center gap-4 border-t pt-6">
+              <button
+                type="button"
+                onClick={() => {
+                  setIsMenuOpen(false)
+                  openDrawer()
+                }}
+                className="font-body text-charcoal hover:text-primary flex items-center gap-3 text-base transition-colors"
+              >
+                <ShoppingCart size={20} />
+                {t('title', { ns: 'cart' })}
+                {totalQuantity > 0 && (
+                  <span className="bg-gradient-gold text-cream flex h-5 min-w-5 items-center justify-center rounded-full px-1 text-xs font-semibold">
+                    {totalQuantity > 99 ? '99+' : totalQuantity}
+                  </span>
+                )}
+              </button>
               <Link
                 to={localizePath('/account')}
                 className="font-body text-charcoal hover:text-primary flex items-center gap-3 text-base transition-colors"

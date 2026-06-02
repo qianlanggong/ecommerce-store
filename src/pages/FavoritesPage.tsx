@@ -57,7 +57,7 @@ export default function FavoritesPage() {
           className="group border-wine/30 text-wine hover:bg-wine/10 shadow-subtle flex items-center gap-2 rounded-xl border-2 bg-white px-6 py-3.5 text-base font-semibold transition-all duration-300 hover:-translate-y-0.5"
         >
           <Trash2 size={20} className="transition-transform duration-300 group-hover:scale-110" />
-          {t('clearAll')}
+          {t('filter.clearAll')}
         </button>
       </div>
 

@@ -161,7 +161,11 @@ export function useProductSort(
           sorted.sort((a, b) => new Date(a.createdAt).getTime() - new Date(b.createdAt).getTime())
           break
         case 'BEST_SELLING':
-          sorted.sort((a, b) => b.totalInventory - a.totalInventory)
+          sorted.sort((a, b) => {
+            const aScore = a.totalInventory + parseFloat(a.priceRange.minVariantPrice.amount) * 0.01
+            const bScore = b.totalInventory + parseFloat(b.priceRange.minVariantPrice.amount) * 0.01
+            return bScore - aScore
+          })
           break
       }
 

@@ -2,6 +2,7 @@ import { Link } from 'react-router-dom'
 import { useTranslation } from 'react-i18next'
 import { useLocale } from '@/hooks/useLocale'
 import { FOOTER_LINKS, APP_NAME } from '@/lib/constants'
+import { FaFacebook, FaInstagram, FaTiktok, FaXTwitter } from 'react-icons/fa6'
 
 export function Footer() {
   const { t } = useTranslation()
@@ -22,13 +23,19 @@ export function Footer() {
               {t('common.storeDescription')}
             </p>
             <div className="mt-6 flex items-center gap-4">
-              {['📷', '📘', '🐦', '📌'].map((icon, i) => (
+              {[
+                { icon: FaFacebook, href: '#', label: 'Facebook' },
+                { icon: FaInstagram, href: '#', label: 'Instagram' },
+                { icon: FaTiktok, href: '#', label: 'TikTok' },
+                { icon: FaXTwitter, href: '#', label: 'X / Twitter' },
+              ].map((social, i) => (
                 <a
                   key={i}
-                  href="#"
-                  className="text-muted-foreground hover:bg-primary shadow-luxury border-luxury flex h-10 w-10 items-center justify-center rounded-full bg-white text-xl transition-all hover:scale-110 hover:text-white"
+                  href={social.href}
+                  aria-label={social.label}
+                  className="text-muted-foreground hover:bg-primary shadow-luxury border-luxury flex h-10 w-10 items-center justify-center rounded-full bg-white text-lg transition-all hover:scale-110 hover:text-white"
                 >
-                  {icon}
+                  <social.icon />
                 </a>
               ))}
             </div>

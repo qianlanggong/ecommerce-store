@@ -18,6 +18,8 @@ export function formatMoney(
   }).format(numericAmount)
 }
 
+export const formatCurrency = formatMoney
+
 export function formatDate(date: string | Date, locale: string = 'en-US'): string {
   const d = typeof date === 'string' ? new Date(date) : date
   return new Intl.DateTimeFormat(locale, {

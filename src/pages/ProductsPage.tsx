@@ -2,6 +2,7 @@ import { useState, useMemo, useCallback, useRef, useEffect } from 'react'
 import { useTranslation } from 'react-i18next'
 import { Filter, Grid3X3, List, SlidersHorizontal, Search, X } from 'lucide-react'
 import { useProducts, useCollections } from '@/services/productService'
+import { useFilteredProducts, useProductSort } from '@/hooks/useProducts'
 import { ProductCard } from '@/components/product/ProductCard'
 import { cn, debounce } from '@/lib/utils'
 import type { ProductFilter } from '@/types'
@@ -9,7 +10,7 @@ import type { ProductFilter } from '@/types'
 type ViewMode = 'grid' | 'list'
 
 export default function ProductsPage() {
-  const { t } = useTranslation('product')
+  const { t } = useTranslation(['product', 'common'])
   const [viewMode, setViewMode] = useState<ViewMode>('grid')
   const [showFilters, setShowFilters] = useState(false)
   const [searchQuery, setSearchQuery] = useState('')
@@ -23,19 +24,17 @@ export default function ProductsPage() {
   const { data: productsData, isLoading, error } = useProducts(filter)
   const { data: collectionsData } = useCollections()
 
-  const products = useMemo(() => {
-    const allProducts = productsData?.edges.map((edge) => edge.node) || []
-    if (!searchQuery.trim()) return allProducts
-    const query = searchQuery.toLowerCase().trim()
-    return allProducts.filter(
-      (product) =>
-        product.title.toLowerCase().includes(query) ||
-        product.description.toLowerCase().includes(query) ||
-        product.productType.toLowerCase().includes(query) ||
-        product.vendor.toLowerCase().includes(query) ||
-        product.tags.some((tag) => tag.toLowerCase().includes(query)),
-    )
-  }, [productsData, searchQuery])
+  const allProducts = useMemo(() => {
+    return productsData?.edges.map((edge) => edge.node) || []
+  }, [productsData])
+
+  const filteredProducts = useFilteredProducts(allProducts, {
+    searchQuery,
+    minPrice: filter.minPrice ? parseFloat(filter.minPrice) : undefined,
+    maxPrice: filter.maxPrice ? parseFloat(filter.maxPrice) : undefined,
+  })
+
+  const products = useProductSort(filteredProducts, filter.sortKey, filter.reverse)
 
   const collections = useMemo(() => {
     return collectionsData?.edges.map((edge) => edge.node) || []
@@ -88,8 +87,8 @@ export default function ProductsPage() {
           <Search className="text-muted-foreground absolute top-1/2 left-5 -translate-y-1/2" size={22} />
           <input
             type="text"
-            placeholder={t('searchPlaceholder', { ns: 'common' })}
-            defaultValue={searchQuery}
+            placeholder={t('common.searchPlaceholder', { ns: 'common' })}
+            value={searchQuery}
             onChange={(e) => handleSearch(e.target.value)}
             className="font-body text-charcoal placeholder:text-muted-foreground w-full bg-transparent py-4 pl-14 pr-14 text-base focus:outline-none"
           />
@@ -98,11 +97,9 @@ export default function ProductsPage() {
               type="button"
               onClick={() => {
                 setSearchQuery('')
-                const input = document.querySelector<HTMLInputElement>('input[type="text"]')
-                if (input) input.value = ''
               }}
               className="text-muted-foreground hover:text-charcoal absolute top-1/2 right-5 -translate-y-1/2 rounded-full p-1 transition-colors"
-              aria-label={t('clearSearch', { ns: 'common' })}
+              aria-label={t('common.clearSearch', { ns: 'common' })}
             >
               <X size={20} />
             </button>

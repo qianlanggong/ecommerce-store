@@ -1,8 +1,7 @@
 import { useQuery, useMutation, useQueryClient } from '@tanstack/react-query'
 import { adapter } from './adapters/factory'
+import { useCartStore } from '@/stores/cartStore'
 import type { CartInput, CartLineInput, CartLineUpdateInput } from '@/types'
-
-const CART_ID_STORAGE_KEY = 'cart_id'
 
 export const cartKeys = {
   all: ['cart'] as const,
@@ -10,19 +9,19 @@ export const cartKeys = {
 }
 
 function getCartId(): string | null {
-  return localStorage.getItem(CART_ID_STORAGE_KEY)
+  return useCartStore.getState().cartId
 }
 
 function setCartId(cartId: string): void {
-  localStorage.setItem(CART_ID_STORAGE_KEY, cartId)
+  useCartStore.getState().setCartId(cartId)
 }
 
 function clearCartId(): void {
-  localStorage.removeItem(CART_ID_STORAGE_KEY)
+  useCartStore.getState().clearCart()
 }
 
 export function useCart() {
-  const cartId = getCartId()
+  const cartId = useCartStore((state) => state.cartId)
 
   return useQuery({
     queryKey: cartKeys.detail(cartId || 'empty'),
@@ -43,6 +42,7 @@ export function useCart() {
     },
     staleTime: 30 * 1000,
     refetchOnWindowFocus: true,
+    enabled: true,
   })
 }
 
@@ -60,11 +60,10 @@ export function useCreateCart() {
 
 export function useAddCartLines() {
   const queryClient = useQueryClient()
-  const cartId = getCartId()
 
   return useMutation({
     mutationFn: async (lines: CartLineInput[]) => {
-      const currentCartId = cartId
+      const currentCartId = getCartId()
       if (!currentCartId) {
         const newCart = await adapter.createCart({ lines })
         setCartId(newCart.id)
@@ -81,10 +80,10 @@ export function useAddCartLines() {
 
 export function useUpdateCartLines() {
   const queryClient = useQueryClient()
-  const cartId = getCartId()
 
   return useMutation({
     mutationFn: (lines: CartLineUpdateInput[]) => {
+      const cartId = getCartId()
       if (!cartId) throw new Error('No cart found')
       return adapter.updateCartLines(cartId, lines)
     },
@@ -97,10 +96,10 @@ export function useUpdateCartLines() {
 
 export function useRemoveCartLines() {
   const queryClient = useQueryClient()
-  const cartId = getCartId()
 
   return useMutation({
     mutationFn: (lineIds: string[]) => {
+      const cartId = getCartId()
       if (!cartId) throw new Error('No cart found')
       return adapter.removeCartLines(cartId, lineIds)
     },
@@ -113,7 +112,6 @@ export function useRemoveCartLines() {
 
 export function useUpdateCartBuyerIdentity() {
   const queryClient = useQueryClient()
-  const cartId = getCartId()
 
   return useMutation({
     mutationFn: (buyerIdentity: {
@@ -121,6 +119,7 @@ export function useUpdateCartBuyerIdentity() {
       customerAccessToken?: string
       countryCode?: string
     }) => {
+      const cartId = getCartId()
       if (!cartId) throw new Error('No cart found')
       return adapter.updateCartBuyerIdentity(cartId, buyerIdentity)
     },
@@ -132,10 +131,10 @@ export function useUpdateCartBuyerIdentity() {
 
 export function useUpdateCartDiscountCodes() {
   const queryClient = useQueryClient()
-  const cartId = getCartId()
 
   return useMutation({
     mutationFn: (discountCodes: string[]) => {
+      const cartId = getCartId()
       if (!cartId) throw new Error('No cart found')
       return adapter.updateCartDiscountCodes(cartId, discountCodes)
     },

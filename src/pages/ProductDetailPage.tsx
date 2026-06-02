@@ -1,6 +1,7 @@
-import { useState, useMemo, useCallback } from 'react'
+import { useState, useMemo, useCallback, useEffect, useRef } from 'react'
 import { useParams, Link } from 'react-router-dom'
 import { useTranslation } from 'react-i18next'
+import DOMPurify from 'dompurify'
 import {
   ChevronLeft,
   ChevronRight,
@@ -35,7 +36,7 @@ import {
 
 export default function ProductDetailPage() {
   const { handle } = useParams<{ handle: string }>()
-  const { t } = useTranslation('product')
+  const { t } = useTranslation(['product', 'common'])
   const { locale, localizePath } = useLocale()
   const [selectedImageIndex, setSelectedImageIndex] = useState(0)
   const [quantity, setQuantity] = useState(1)
@@ -43,14 +44,22 @@ export default function ProductDetailPage() {
   const [showAddedMessage, setShowAddedMessage] = useState(false)
   const addCartLines = useAddCartLines()
   const toggleFavorite = useFavoritesStore((state) => state.toggleFavorite)
+  const timeoutRef = useRef<ReturnType<typeof setTimeout> | null>(null)
 
   const { data: product, isLoading, error } = useProduct(handle || '')
   const prefetchProduct = usePrefetchProduct()
 
-  const isFavorite = useMemo(() => {
-    if (!product) return false
-    return useFavoritesStore.getState().isFavorite(product.id)
-  }, [product])
+  const isFavorite = useFavoritesStore((state) =>
+    product ? state.isFavorite(product.id) : false
+  )
+
+  useEffect(() => {
+    return () => {
+      if (timeoutRef.current) {
+        clearTimeout(timeoutRef.current)
+      }
+    }
+  }, [])
 
   const images = useMemo(() => {
     return product?.images.edges.map((edge) => edge.node) || []
@@ -111,7 +120,10 @@ export default function ProductDetailPage() {
       {
         onSuccess: () => {
           setShowAddedMessage(true)
-          setTimeout(() => setShowAddedMessage(false), 2000)
+          if (timeoutRef.current) {
+            clearTimeout(timeoutRef.current)
+          }
+          timeoutRef.current = setTimeout(() => setShowAddedMessage(false), 2000)
         },
       },
     )
@@ -300,7 +312,7 @@ export default function ProductDetailPage() {
             <div className="bg-gradient-gold absolute top-0 -left-4 h-full w-1 rounded-full" />
             <div
               className="font-body text-charcoal/80 pl-6 text-lg leading-relaxed"
-              dangerouslySetInnerHTML={{ __html: product.descriptionHtml }}
+              dangerouslySetInnerHTML={{ __html: DOMPurify.sanitize(product.descriptionHtml) }}
             />
           </div>
 
