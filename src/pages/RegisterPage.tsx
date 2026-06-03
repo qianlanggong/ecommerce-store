@@ -33,13 +33,13 @@ export default function RegisterPage() {
   const [showSuccess, setShowSuccess] = useState(false)
 
   useEffect(() => {
-    if (register.isSuccess && !showSuccess) {
+    if (login.isSuccess && !showSuccess) {
       setShowSuccess(true)
       setTimeout(() => {
         navigate(localizePath('/account'), { replace: true })
       }, 1500)
     }
-  }, [register.isSuccess, navigate, localizePath, showSuccess])
+  }, [login.isSuccess, navigate, localizePath, showSuccess])
 
   const validateForm = () => {
     const newErrors: typeof errors = {}
@@ -162,6 +162,8 @@ export default function RegisterPage() {
                       <div className="relative">
                         <User className="text-muted-foreground absolute top-1/2 left-4 -translate-y-1/2" size={18} />
                         <input
+                          id="firstName"
+                          name="firstName"
                           type="text"
                           value={firstName}
                           onChange={(e) => setFirstName(e.target.value)}
@@ -184,6 +186,8 @@ export default function RegisterPage() {
                       <div className="relative">
                         <User className="text-muted-foreground absolute top-1/2 left-4 -translate-y-1/2" size={18} />
                         <input
+                          id="lastName"
+                          name="lastName"
                           type="text"
                           value={lastName}
                           onChange={(e) => setLastName(e.target.value)}
@@ -207,6 +211,8 @@ export default function RegisterPage() {
                     <div className="relative">
                       <Mail className="text-muted-foreground absolute top-1/2 left-4 -translate-y-1/2" size={20} />
                       <input
+                        id="email"
+                        name="email"
                         type="email"
                         value={email}
                         onChange={(e) => setEmail(e.target.value)}
@@ -230,6 +236,8 @@ export default function RegisterPage() {
                     <div className="relative">
                       <Lock className="text-muted-foreground absolute top-1/2 left-4 -translate-y-1/2" size={20} />
                       <input
+                        id="password"
+                        name="password"
                         type={showPassword ? 'text' : 'password'}
                         value={password}
                         onChange={(e) => setPassword(e.target.value)}
@@ -261,6 +269,8 @@ export default function RegisterPage() {
                     <div className="relative">
                       <Lock className="text-muted-foreground absolute top-1/2 left-4 -translate-y-1/2" size={20} />
                       <input
+                        id="confirmPassword"
+                        name="confirmPassword"
                         type={showConfirmPassword ? 'text' : 'password'}
                         value={confirmPassword}
                         onChange={(e) => setConfirmPassword(e.target.value)}
@@ -286,8 +296,10 @@ export default function RegisterPage() {
                   </div>
 
                   <div>
-                    <label className="flex items-start gap-3">
+                    <label htmlFor="agreeTerms" className="flex items-start gap-3">
                       <input
+                        id="agreeTerms"
+                        name="agreeTerms"
                         type="checkbox"
                         checked={agreeTerms}
                         onChange={(e) => setAgreeTerms(e.target.checked)}

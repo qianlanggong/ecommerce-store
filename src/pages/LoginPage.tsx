@@ -111,6 +111,8 @@ export default function LoginPage() {
                     <div className="relative">
                       <Mail className="text-muted-foreground absolute top-1/2 left-4 -translate-y-1/2" size={20} />
                       <input
+                        id="email"
+                        name="email"
                         type="email"
                         value={email}
                         onChange={(e) => setEmail(e.target.value)}
@@ -119,7 +121,6 @@ export default function LoginPage() {
                           'border-border bg-cream/50 font-body text-charcoal placeholder:text-muted-foreground focus:border-primary focus:ring-primary/20 w-full rounded-xl border py-3.5 pl-12 pr-4 text-base transition-all focus:ring-2 focus:outline-none',
                           errors.email && 'border-wine focus:border-wine focus:ring-wine/20',
                         )}
-                        disabled={login.isPending}
                       />
                     </div>
                     {errors.email && (
@@ -134,6 +135,8 @@ export default function LoginPage() {
                     <div className="relative">
                       <Lock className="text-muted-foreground absolute top-1/2 left-4 -translate-y-1/2" size={20} />
                       <input
+                        id="password"
+                        name="password"
                         type={showPassword ? 'text' : 'password'}
                         value={password}
                         onChange={(e) => setPassword(e.target.value)}
@@ -142,7 +145,6 @@ export default function LoginPage() {
                           'border-border bg-cream/50 font-body text-charcoal placeholder:text-muted-foreground focus:border-primary focus:ring-primary/20 w-full rounded-xl border py-3.5 pl-12 pr-12 text-base transition-all focus:ring-2 focus:outline-none',
                           errors.password && 'border-wine focus:border-wine focus:ring-wine/20',
                         )}
-                        disabled={login.isPending}
                       />
                       <button
                         type="button"
@@ -159,8 +161,10 @@ export default function LoginPage() {
                   </div>
 
                   <div className="flex items-center justify-between">
-                    <label className="flex items-center gap-2">
+                    <label htmlFor="rememberMe" className="flex items-center gap-2">
                       <input
+                        id="rememberMe"
+                        name="rememberMe"
                         type="checkbox"
                         className="text-primary focus:ring-primary h-4 w-4 rounded border-border"
                       />

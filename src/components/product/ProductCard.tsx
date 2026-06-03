@@ -4,7 +4,8 @@ import { ShoppingCart, Heart, Eye, Check } from 'lucide-react'
 import { useTranslation } from 'react-i18next'
 import type { Product } from '@/types'
 import { useLocale } from '@/hooks/useLocale'
-import { useFavoritesStore } from '@/stores'
+import { useFavoritesStore, useCartStore } from '@/stores'
+import { useToast } from '@/stores/toastStore'
 import { useAddCartLines } from '@/services/cartService'
 import { cn, getProductDisplayPrice, getDiscountPercent, isOnSale } from '@/lib/utils'
 
@@ -21,7 +22,9 @@ export function ProductCard({ product, className, index = 0 }: ProductCardProps)
   const [showAddedMessage, setShowAddedMessage] = useState(false)
   const isFavorite = useFavoritesStore((state) => state.isFavorite(product.id))
   const toggleFavorite = useFavoritesStore((state) => state.toggleFavorite)
+  const toast = useToast()
   const addCartLines = useAddCartLines()
+  const openDrawer = useCartStore((state) => state.openDrawer)
 
   const displayPrice = getProductDisplayPrice(product, locale === 'zh' ? 'zh-CN' : 'en-US')
   const firstVariant = product.variants.edges[0]?.node
@@ -43,11 +46,12 @@ export function ProductCard({ product, className, index = 0 }: ProductCardProps)
           onSuccess: () => {
             setShowAddedMessage(true)
             setTimeout(() => setShowAddedMessage(false), 2000)
+            openDrawer()
           },
         },
       )
     },
-    [firstVariant, product.availableForSale, addCartLines],
+    [firstVariant, product.availableForSale, addCartLines, openDrawer],
   )
 
   const handleToggleFavorite = useCallback(
@@ -55,8 +59,13 @@ export function ProductCard({ product, className, index = 0 }: ProductCardProps)
       e.preventDefault()
       e.stopPropagation()
       toggleFavorite(product.id)
+      if (isFavorite) {
+        toast.info(t('favoriteRemoved'))
+      } else {
+        toast.success(t('favoriteAdded'))
+      }
     },
-    [product.id, toggleFavorite],
+    [product.id, toggleFavorite, isFavorite, toast, t],
   )
 
   const productUrl = localizePath(`/products/${product.handle}`)

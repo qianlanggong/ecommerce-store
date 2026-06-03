@@ -1,8 +1,12 @@
-import { BrowserRouter as Router, Routes, Route, Navigate } from 'react-router-dom'
+import { BrowserRouter as Router, Routes, Route, Navigate, useLocation } from 'react-router-dom'
+import { useEffect } from 'react'
+import { useTranslation } from 'react-i18next'
 import { QueryProvider } from '@/providers/QueryProvider'
 import { LocaleRouter } from '@/components/locale/LocaleRouter'
 import { MainLayout } from '@/components/layout/MainLayout'
 import { ProtectedRoute } from '@/components/auth/ProtectedRoute'
+import { ToastContainer } from '@/components/ui/ToastContainer'
+import { ErrorBoundary } from '@/components/error/ErrorBoundary'
 import Home from '@/pages/Home'
 import ProductsPage from '@/pages/ProductsPage'
 import ProductDetailPage from '@/pages/ProductDetailPage'
@@ -13,10 +17,38 @@ import RegisterPage from '@/pages/RegisterPage'
 import ForgotPasswordPage from '@/pages/ForgotPasswordPage'
 import ResetPasswordPage from '@/pages/ResetPasswordPage'
 import AccountPage from '@/pages/AccountPage'
+import NotFoundPage from '@/pages/NotFoundPage'
+import { useUserStore } from '@/stores/userStore'
+import { useToastStore } from '@/stores/toastStore'
+
+function TokenExpiryListener() {
+  const { t } = useTranslation('common')
+  const location = useLocation()
+  const addToast = useToastStore.getState().addToast
+  const getValidAccessToken = useUserStore.getState().getValidAccessToken
+  const accessToken = useUserStore.getState().accessToken
+
+  useEffect(() => {
+    const checkToken = () => {
+      if (accessToken && !getValidAccessToken()) {
+        addToast(t('errors.unauthorized'), 'error')
+      }
+    }
+
+    checkToken()
+
+    const interval = setInterval(checkToken, 60000)
+
+    return () => clearInterval(interval)
+  }, [location.pathname, accessToken, getValidAccessToken, addToast, t])
+
+  return null
+}
 
 function AppRoutes() {
   return (
     <MainLayout>
+      <TokenExpiryListener />
       <Routes>
         <Route path="/" element={<Navigate to="/en" replace />} />
         <Route path="/:locale" element={<Home />} />
@@ -47,6 +79,8 @@ function AppRoutes() {
         />
         <Route path="/:locale/favorites" element={<FavoritesPage />} />
         <Route path="/:locale/account/favorites" element={<FavoritesPage />} />
+        <Route path="/:locale/*" element={<NotFoundPage />} />
+        <Route path="*" element={<NotFoundPage />} />
       </Routes>
     </MainLayout>
   )
@@ -56,9 +90,12 @@ export default function App() {
   return (
     <QueryProvider>
       <Router>
-        <LocaleRouter>
-          <AppRoutes />
-        </LocaleRouter>
+        <ErrorBoundary>
+          <LocaleRouter>
+            <ToastContainer />
+            <AppRoutes />
+          </LocaleRouter>
+        </ErrorBoundary>
       </Router>
     </QueryProvider>
   )

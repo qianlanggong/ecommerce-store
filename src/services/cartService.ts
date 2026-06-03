@@ -1,6 +1,8 @@
 import { useQuery, useMutation, useQueryClient } from '@tanstack/react-query'
+import { useTranslation } from 'react-i18next'
 import { adapter } from './adapters/factory'
 import { useCartStore } from '@/stores/cartStore'
+import { useToastStore } from '@/stores/toastStore'
 import type { CartInput, CartLineInput, CartLineUpdateInput } from '@/types'
 
 export const cartKeys = {
@@ -60,6 +62,7 @@ export function useCreateCart() {
 
 export function useAddCartLines() {
   const queryClient = useQueryClient()
+  const { t } = useTranslation('cart')
 
   return useMutation({
     mutationFn: async (lines: CartLineInput[]) => {
@@ -74,12 +77,18 @@ export function useAddCartLines() {
     onSuccess: (cart) => {
       queryClient.setQueryData(cartKeys.detail(cart.id), cart)
       queryClient.invalidateQueries({ queryKey: cartKeys.all })
+      useCartStore.getState().openDrawer()
+      useToastStore.getState().addToast(t('addSuccess'), 'success')
+    },
+    onError: () => {
+      useToastStore.getState().addToast(t('addError'), 'error')
     },
   })
 }
 
 export function useUpdateCartLines() {
   const queryClient = useQueryClient()
+  const { t } = useTranslation('cart')
 
   return useMutation({
     mutationFn: (lines: CartLineUpdateInput[]) => {
@@ -90,12 +99,17 @@ export function useUpdateCartLines() {
     onSuccess: (cart) => {
       queryClient.setQueryData(cartKeys.detail(cart.id), cart)
       queryClient.invalidateQueries({ queryKey: cartKeys.all })
+      useToastStore.getState().addToast(t('updateSuccess'), 'success')
+    },
+    onError: () => {
+      useToastStore.getState().addToast(t('updateError'), 'error')
     },
   })
 }
 
 export function useRemoveCartLines() {
   const queryClient = useQueryClient()
+  const { t } = useTranslation('cart')
 
   return useMutation({
     mutationFn: (lineIds: string[]) => {
@@ -106,6 +120,10 @@ export function useRemoveCartLines() {
     onSuccess: (cart) => {
       queryClient.setQueryData(cartKeys.detail(cart.id), cart)
       queryClient.invalidateQueries({ queryKey: cartKeys.all })
+      useToastStore.getState().addToast(t('removeSuccess'), 'success')
+    },
+    onError: () => {
+      useToastStore.getState().addToast(t('removeError'), 'error')
     },
   })
 }

@@ -23,7 +23,7 @@ import {
 import { useAddCartLines } from '@/services/cartService'
 import { ProductCard } from '@/components/product/ProductCard'
 import { useLocale } from '@/hooks/useLocale'
-import { useFavoritesStore } from '@/stores'
+import { useFavoritesStore, useCartStore } from '@/stores'
 import { MAX_CART_QUANTITY, MIN_CART_QUANTITY } from '@/lib/constants'
 import {
   cn,
@@ -43,6 +43,7 @@ export default function ProductDetailPage() {
   const [selectedOptions, setSelectedOptions] = useState<Record<string, string>>({})
   const [showAddedMessage, setShowAddedMessage] = useState(false)
   const addCartLines = useAddCartLines()
+  const openDrawer = useCartStore((state) => state.openDrawer)
   const toggleFavorite = useFavoritesStore((state) => state.toggleFavorite)
   const timeoutRef = useRef<ReturnType<typeof setTimeout> | null>(null)
 
@@ -124,10 +125,11 @@ export default function ProductDetailPage() {
             clearTimeout(timeoutRef.current)
           }
           timeoutRef.current = setTimeout(() => setShowAddedMessage(false), 2000)
+          openDrawer()
         },
       },
     )
-  }, [product, selectedVariant, quantity, addCartLines])
+  }, [product, selectedVariant, quantity, addCartLines, openDrawer])
 
   const handleBuyNow = useCallback(() => {
     if (!product || !selectedVariant) return

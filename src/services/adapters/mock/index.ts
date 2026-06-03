@@ -22,6 +22,11 @@ import type {
   Money,
 } from '@/types'
 import {
+  OrderFulfillmentStatus,
+  OrderFinancialStatus,
+  OrderCancelReason,
+} from '@/types'
+import {
   getMockProducts,
   getMockProduct,
   getMockProductRecommendations,
@@ -63,6 +68,134 @@ const TEST_ACCOUNTS = [
     },
   },
 ]
+
+function generateMockOrders(customerId: string, count: number) {
+  const statuses = [
+    OrderFulfillmentStatus.FULFILLED,
+    OrderFulfillmentStatus.IN_PROGRESS,
+    OrderFulfillmentStatus.OPEN,
+    OrderFulfillmentStatus.FULFILLED,
+    OrderFulfillmentStatus.FULFILLED,
+  ]
+  const financialStatuses = [
+    OrderFinancialStatus.PAID,
+    OrderFinancialStatus.PAID,
+    OrderFinancialStatus.PENDING,
+    OrderFinancialStatus.PAID,
+    OrderFinancialStatus.REFUNDED,
+  ]
+  const products = getAllMockProducts()
+
+  return Array.from({ length: count }, (_, i) => {
+    const orderNumber = 1000 + i
+    const productIndex = i % products.length
+    const product = products[productIndex]
+    const variant = product.variants.edges[0]?.node
+    const daysAgo = Math.floor(Math.random() * 30)
+    const processedAt = new Date(Date.now() - daysAgo * 24 * 60 * 60 * 1000).toISOString()
+    const totalAmount = (Math.random() * 200 + 20).toFixed(2)
+
+    return {
+      node: {
+        id: `gid://shopify/Order/${orderNumber}`,
+        name: `#${orderNumber}`,
+        orderNumber,
+        statusPageUrl: `https://example.com/orders/${orderNumber}`,
+        processedAt,
+        currencyCode: 'USD',
+        currentTotalPrice: { amount: totalAmount, currencyCode: 'USD' },
+        currentSubtotalPrice: { amount: (parseFloat(totalAmount) - 10).toFixed(2), currencyCode: 'USD' },
+        currentTotalTax: { amount: '10.00', currencyCode: 'USD' },
+        totalShippingPrice: { amount: '5.99', currencyCode: 'USD' },
+        totalPrice: { amount: totalAmount, currencyCode: 'USD' },
+        subtotalPrice: { amount: (parseFloat(totalAmount) - 10).toFixed(2), currencyCode: 'USD' },
+        totalTax: { amount: '10.00', currencyCode: 'USD' },
+        totalDiscounts: { amount: '0.00', currencyCode: 'USD' },
+        totalShipping: { amount: '5.99', currencyCode: 'USD' },
+        totalRefunded: { amount: financialStatuses[i] === OrderFinancialStatus.REFUNDED ? totalAmount : '0.00', currencyCode: 'USD' },
+        fulfillmentStatus: statuses[i],
+        financialStatus: financialStatuses[i],
+        cancelReason: financialStatuses[i] === OrderFinancialStatus.REFUNDED ? OrderCancelReason.CUSTOMER : undefined,
+        canceledAt: financialStatuses[i] === OrderFinancialStatus.REFUNDED ? processedAt : undefined,
+        lineItems: {
+          edges: [
+            {
+              node: {
+                id: `gid://shopify/LineItem/${orderNumber}-1`,
+                variantTitle: variant?.title || 'Default',
+                title: product.title,
+                quantity: i % 3 + 1,
+                originalTotalPrice: { amount: totalAmount, currencyCode: 'USD' },
+                discountedTotalPrice: { amount: totalAmount, currencyCode: 'USD' },
+                originalUnitPrice: { amount: (parseFloat(totalAmount) / (i % 3 + 1)).toFixed(2), currencyCode: 'USD' },
+                product,
+                variant,
+                image: product.images.edges[0]?.node,
+                taxLines: [],
+                discounts: [],
+              },
+            },
+          ],
+        },
+        shippingAddress: {
+          id: 'gid://shopify/MailingAddress/1',
+          address1: '123 Main St',
+          address2: 'Apt 4B',
+          city: 'New York',
+          province: 'NY',
+          country: 'United States',
+          zip: '10001',
+          phone: '+1 555-123-4567',
+          firstName: 'Demo',
+          lastName: 'User',
+          name: 'Demo User',
+          countryCode: 'US',
+          provinceCode: 'NY',
+        },
+        billingAddress: {
+          id: 'gid://shopify/MailingAddress/1',
+          address1: '123 Main St',
+          address2: 'Apt 4B',
+          city: 'New York',
+          province: 'NY',
+          country: 'United States',
+          zip: '10001',
+          phone: '+1 555-123-4567',
+          firstName: 'Demo',
+          lastName: 'User',
+          name: 'Demo User',
+          countryCode: 'US',
+          provinceCode: 'NY',
+        },
+        shippingLines: {
+          edges: [
+            {
+              node: {
+                id: 'gid://shopify/ShippingLine/1',
+                title: 'Standard Shipping',
+                price: { amount: '5.99', currencyCode: 'USD' },
+                discountedPrice: { amount: '5.99', currencyCode: 'USD' },
+                source: 'shopify',
+              },
+            },
+          ],
+        },
+        discountApplications: { edges: [] },
+        fulfillments: { edges: [] },
+        refunds: { edges: [] },
+        createdAt: processedAt,
+        updatedAt: processedAt,
+        customer: {
+          id: customerId,
+          email: 'demo@example.com',
+          firstName: 'Demo',
+          lastName: 'User',
+          displayName: 'Demo User',
+        },
+      },
+    }
+  })
+}
 
 function findVariantById(variantId: string): ProductVariant | null {
   const products = getAllMockProducts()
@@ -454,6 +587,8 @@ export function createMockAdapter(): IEcommerceAdapter {
         customerData = TEST_ACCOUNTS[1].customer
       }
 
+      const orders = generateMockOrders(customerData.id, customerData.numberOfOrders)
+
       return {
         id: customerData.id,
         email: customerData.email,
@@ -463,10 +598,10 @@ export function createMockAdapter(): IEcommerceAdapter {
         createdAt: now,
         updatedAt: now,
         acceptsMarketing: customerData.acceptsMarketing,
-        orders: { edges: [], pageInfo: { hasNextPage: false, hasPreviousPage: false } },
+        orders: { edges: orders, pageInfo: { hasNextPage: false, hasPreviousPage: false } },
         addresses: { edges: [] },
         defaultAddress: null,
-        numberOfOrders: customerData.numberOfOrders,
+        numberOfOrders: orders.length,
         tags: customerData.tags,
       }
     },
@@ -480,9 +615,11 @@ export function createMockAdapter(): IEcommerceAdapter {
       const now = new Date().toISOString()
       const firstName = input.firstName || 'John'
       const lastName = input.lastName || 'Doe'
+      const customerId = 'gid://shopify/Customer/123'
+      const orders = generateMockOrders(customerId, 5)
       return {
         customer: {
-          id: `gid://shopify/Customer/123`,
+          id: customerId,
           email: input.email || 'customer@example.com',
           firstName,
           lastName,
@@ -490,10 +627,10 @@ export function createMockAdapter(): IEcommerceAdapter {
           createdAt: now,
           updatedAt: now,
           acceptsMarketing: input.acceptsMarketing || false,
-          orders: { edges: [], pageInfo: { hasNextPage: false, hasPreviousPage: false } },
+          orders: { edges: orders, pageInfo: { hasNextPage: false, hasPreviousPage: false } },
           addresses: { edges: [] },
           defaultAddress: null,
-          numberOfOrders: 0,
+          numberOfOrders: orders.length,
           tags: [],
         },
         userErrors: [],
@@ -607,10 +744,12 @@ export function createMockAdapter(): IEcommerceAdapter {
 
     async getOrders(accessToken: string, first?: number): Promise<OrderConnection> {
       void accessToken
-      void first
       await delay(200)
+      const customerId = 'gid://shopify/Customer/123'
+      const allOrders = generateMockOrders(customerId, 5)
+      const edges = first ? allOrders.slice(0, first) : allOrders
       return {
-        edges: [],
+        edges,
         pageInfo: {
           hasNextPage: false,
           hasPreviousPage: false,

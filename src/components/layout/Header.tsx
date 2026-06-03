@@ -102,7 +102,7 @@ export function Header() {
               )}
             </button>
 
-            <div ref={userMenuRef} className="relative hidden md:block">
+            <div ref={userMenuRef} className="hidden md:block">
               <button
                 type="button"
                 onClick={toggleUserMenu}
@@ -125,7 +125,7 @@ export function Header() {
               </button>
 
               {isUserMenuOpen && isAuthenticated && (
-                <div className="shadow-luxury border-luxury absolute right-0 mt-2 w-56 overflow-hidden rounded-xl bg-white py-2">
+                <div className="shadow-luxury border-luxury !fixed top-20 right-4 z-50 mt-2 w-56 max-h-[80vh] overflow-y-auto rounded-xl bg-white py-2">
                   <div className="border-cream/50 px-4 py-3 border-b">
                     <p className="font-display text-charcoal text-sm font-semibold">
                       {customer?.displayName}

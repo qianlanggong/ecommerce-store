@@ -52,7 +52,7 @@ const mockProducts: Product[] = [
       edges: [
         {
           node: {
-            id: 'v1',
+            id: 'prod1-v1',
             title: 'XS / White',
             price: { amount: '29.99', currencyCode: 'USD' },
             availableForSale: true,
@@ -65,7 +65,7 @@ const mockProducts: Product[] = [
         },
         {
           node: {
-            id: 'v2',
+            id: 'prod1-v2',
             title: 'S / White',
             price: { amount: '29.99', currencyCode: 'USD' },
             availableForSale: true,
@@ -78,7 +78,7 @@ const mockProducts: Product[] = [
         },
         {
           node: {
-            id: 'v3',
+             id: 'prod1-v3',
             title: 'M / White',
             price: { amount: '29.99', currencyCode: 'USD' },
             availableForSale: true,
@@ -91,7 +91,7 @@ const mockProducts: Product[] = [
         },
         {
           node: {
-            id: 'v4',
+            id: 'prod1-v4',
             title: 'L / White',
             price: { amount: '29.99', currencyCode: 'USD' },
             availableForSale: true,
@@ -104,7 +104,7 @@ const mockProducts: Product[] = [
         },
         {
           node: {
-            id: 'v5',
+            id: 'prod1-v5',
             title: 'XL / White',
             price: { amount: '29.99', currencyCode: 'USD' },
             availableForSale: true,
@@ -170,7 +170,7 @@ const mockProducts: Product[] = [
       edges: [
         {
           node: {
-            id: 'v1',
+             id: 'prod2-v1',
             title: '28 / Dark Blue',
             price: { amount: '89.99', currencyCode: 'USD' },
             compareAtPrice: { amount: '119.99', currencyCode: 'USD' },
@@ -184,7 +184,7 @@ const mockProducts: Product[] = [
         },
         {
           node: {
-            id: 'v2',
+            id: 'prod2-v2',
             title: '30 / Dark Blue',
             price: { amount: '89.99', currencyCode: 'USD' },
             compareAtPrice: { amount: '119.99', currencyCode: 'USD' },
@@ -198,7 +198,7 @@ const mockProducts: Product[] = [
         },
         {
           node: {
-            id: 'v3',
+            id: 'prod2-v3',
             title: '32 / Dark Blue',
             price: { amount: '89.99', currencyCode: 'USD' },
             compareAtPrice: { amount: '119.99', currencyCode: 'USD' },
@@ -212,7 +212,7 @@ const mockProducts: Product[] = [
         },
         {
           node: {
-            id: 'v4',
+            id: 'prod2-v4',
             title: '34 / Dark Blue',
             price: { amount: '89.99', currencyCode: 'USD' },
             compareAtPrice: { amount: '119.99', currencyCode: 'USD' },
@@ -226,7 +226,7 @@ const mockProducts: Product[] = [
         },
         {
           node: {
-            id: 'v5',
+            id: 'prod2-v5',
             title: '36 / Dark Blue',
             price: { amount: '89.99', currencyCode: 'USD' },
             compareAtPrice: { amount: '119.99', currencyCode: 'USD' },
@@ -289,7 +289,7 @@ const mockProducts: Product[] = [
       edges: [
         {
           node: {
-            id: 'v1',
+             id: 'prod3-v1',
             title: 'S / Black',
             price: { amount: '299.99', currencyCode: 'USD' },
             availableForSale: true,
@@ -302,7 +302,7 @@ const mockProducts: Product[] = [
         },
         {
           node: {
-            id: 'v2',
+            id: 'prod3-v2',
             title: 'M / Black',
             price: { amount: '299.99', currencyCode: 'USD' },
             availableForSale: true,
@@ -315,7 +315,7 @@ const mockProducts: Product[] = [
         },
         {
           node: {
-            id: 'v3',
+            id: 'prod3-v3',
             title: 'L / Black',
             price: { amount: '299.99', currencyCode: 'USD' },
             availableForSale: true,
@@ -328,7 +328,7 @@ const mockProducts: Product[] = [
         },
         {
           node: {
-            id: 'v4',
+            id: 'prod3-v4',
             title: 'XL / Black',
             price: { amount: '299.99', currencyCode: 'USD' },
             availableForSale: true,
@@ -387,7 +387,7 @@ const mockProducts: Product[] = [
       edges: [
         {
           node: {
-            id: 'v1',
+             id: 'prod4-v1',
             title: 'White',
             price: { amount: '129.99', currencyCode: 'USD' },
             availableForSale: true,
@@ -397,7 +397,7 @@ const mockProducts: Product[] = [
         },
         {
           node: {
-            id: 'v2',
+            id: 'prod4-v2',
             title: 'Black',
             price: { amount: '129.99', currencyCode: 'USD' },
             availableForSale: true,
@@ -407,7 +407,7 @@ const mockProducts: Product[] = [
         },
         {
           node: {
-            id: 'v3',
+            id: 'prod4-v3',
             title: 'Blue',
             price: { amount: '129.99', currencyCode: 'USD' },
             availableForSale: true,
@@ -466,7 +466,7 @@ const mockProducts: Product[] = [
       edges: [
         {
           node: {
-            id: 'v1',
+             id: 'prod5-v1',
             title: 'S / Gray',
             price: { amount: '59.99', currencyCode: 'USD' },
             availableForSale: true,
@@ -479,7 +479,7 @@ const mockProducts: Product[] = [
         },
         {
           node: {
-            id: 'v2',
+            id: 'prod5-v2',
             title: 'M / Gray',
             price: { amount: '59.99', currencyCode: 'USD' },
             availableForSale: true,
@@ -492,7 +492,7 @@ const mockProducts: Product[] = [
         },
         {
           node: {
-            id: 'v3',
+            id: 'prod5-v3',
             title: 'L / Gray',
             price: { amount: '59.99', currencyCode: 'USD' },
             availableForSale: true,
@@ -555,7 +555,7 @@ const mockProducts: Product[] = [
       edges: [
         {
           node: {
-            id: 'v1',
+             id: 'prod6-v1',
             title: 'Tan',
             price: { amount: '49.99', currencyCode: 'USD' },
             compareAtPrice: { amount: '69.99', currencyCode: 'USD' },
@@ -566,7 +566,7 @@ const mockProducts: Product[] = [
         },
         {
           node: {
-            id: 'v2',
+            id: 'prod6-v2',
             title: 'Black',
             price: { amount: '49.99', currencyCode: 'USD' },
             compareAtPrice: { amount: '69.99', currencyCode: 'USD' },
@@ -577,7 +577,7 @@ const mockProducts: Product[] = [
         },
         {
           node: {
-            id: 'v3',
+            id: 'prod6-v3',
             title: 'Dark Brown',
             price: { amount: '49.99', currencyCode: 'USD' },
             compareAtPrice: { amount: '69.99', currencyCode: 'USD' },
@@ -637,7 +637,7 @@ const mockProducts: Product[] = [
       edges: [
         {
           node: {
-            id: 'v1',
+             id: 'prod7-v1',
             title: '500ml / Silver',
             price: { amount: '29.99', currencyCode: 'USD' },
             availableForSale: true,
@@ -650,7 +650,7 @@ const mockProducts: Product[] = [
         },
         {
           node: {
-            id: 'v2',
+            id: 'prod7-v2',
             title: '750ml / Silver',
             price: { amount: '34.99', currencyCode: 'USD' },
             availableForSale: true,
@@ -663,7 +663,7 @@ const mockProducts: Product[] = [
         },
         {
           node: {
-            id: 'v3',
+            id: 'prod7-v3',
             title: '1L / Silver',
             price: { amount: '39.99', currencyCode: 'USD' },
             availableForSale: true,
@@ -725,7 +725,7 @@ const mockProducts: Product[] = [
       edges: [
         {
           node: {
-            id: 'v1',
+             id: 'prod8-v1',
             title: '7 / White',
             price: { amount: '54.99', currencyCode: 'USD' },
             availableForSale: true,
@@ -738,9 +738,9 @@ const mockProducts: Product[] = [
         },
         {
           node: {
-            id: 'v2',
+            id: 'prod8-v2',
             title: '8 / White',
-            price: { amount: '54.99', currencyCode: 'USD' },
+            price: { amount: '79.99', currencyCode: 'USD' },
             availableForSale: true,
             quantityAvailable: 25,
             selectedOptions: [
@@ -751,7 +751,7 @@ const mockProducts: Product[] = [
         },
         {
           node: {
-            id: 'v3',
+            id: 'prod8-v3',
             title: '9 / White',
             price: { amount: '54.99', currencyCode: 'USD' },
             availableForSale: true,

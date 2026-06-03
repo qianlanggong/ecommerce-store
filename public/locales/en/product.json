@@ -24,6 +24,8 @@
   "quantity": "Quantity",
   "addSuccess": "Added to cart successfully",
   "favoriteSuccess": "Added to favorites",
+  "favoriteAdded": "Added to favorites",
+  "favoriteRemoved": "Removed from favorites",
   "favoriteRemoveSuccess": "Removed from favorites",
   "noProducts": "No products found",
   "productNotFound": "Product Not Found",

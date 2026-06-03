@@ -24,6 +24,8 @@
   "quantity": "数量",
   "addSuccess": "已成功加入购物车",
   "favoriteSuccess": "已加入收藏",
+  "favoriteAdded": "已加入收藏",
+  "favoriteRemoved": "已取消收藏",
   "favoriteRemoveSuccess": "已取消收藏",
   "noProducts": "未找到相关商品",
   "productNotFound": "商品未找到",
