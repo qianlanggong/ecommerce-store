@@ -8,9 +8,9 @@
 |------|-----|
 | **索引编号** | ARC-IDX-2026-001 |
 | **创建日期** | 2026-06-01 |
-| **最后更新** | 2026-06-02 |
+| **最后更新** | 2026-06-03 |
 | **项目名称** | 跨境电商独立站 MVP |
-| **文档版本** | v1.1 |
+| **文档版本** | v1.2 |
 | **维护人** | AI 开发助手 |
 
 ---
@@ -21,8 +21,15 @@
 .trae/documents/
 ├── ecommerce_store_plan.md      # 项目开发计划（主文档）
 ├── phase_reports/               # 阶段汇报文档
-│   └── 20260601_project_progress_report_v1.0.md
+│   ├── 20260601_project_progress_report_v1.0.md
+│   ├── 20260602_project_progress_report_v2.0.md
+│   ├── 20260603_project_progress_report_v3.0.md
+│   ├── 20260601_phase2_bug_fix_report_v1.0.md
+│   ├── 20260602_phase3_bug_fix_report_v1.0.md
+│   └── 20260603_post_phase4_bug_fix_report_v1.0.md
 ├── notifications/               # 项目通知文档
+│   ├── NOTIFY-2026-001_phase2_complete.md
+│   └── NOTIFY-2026-002_phase3_complete.md
 └── archive/                     # 存档索引与历史文档
     └── archive_index.md         # 本文档
 ```
@@ -42,8 +49,11 @@
 | 文档编号 | 文档名称 | 版本 | 汇报日期 | 所属阶段 | 路径 | 状态 |
 |----------|----------|------|----------|----------|------|------|
 | DOC-PROG-2026-001 | 项目进度汇报（Phase 0-2 完成） | v1.0 | 2026-06-01 | Phase 0-2 | [20260601_project_progress_report_v1.0.md](file:///d:/Atemp/cc/ecommerce-store/.trae/documents/phase_reports/20260601_project_progress_report_v1.0.md) | 📦 已归档 |
-| DOC-PROG-2026-002 | 项目进度汇报（Phase 0-3 完成） | v2.0 | 2026-06-02 | Phase 0-3 | [20260602_project_progress_report_v2.0.md](file:///d:/Atemp/cc/ecommerce-store/.trae/documents/phase_reports/20260602_project_progress_report_v2.0.md) | ✅ 最新 |
-| DOC-FIX-2026-002 | Phase 3 Bug 修复报告 | v1.0 | 2026-06-02 | Phase 3 | [20260602_phase3_bug_fix_report_v1.0.md](file:///d:/Atemp/cc/ecommerce-store/.trae/documents/phase_reports/20260602_phase3_bug_fix_report_v1.0.md) | ✅ 最新 |
+| DOC-PROG-2026-002 | 项目进度汇报（Phase 0-3 完成） | v2.0 | 2026-06-02 | Phase 0-3 | [20260602_project_progress_report_v2.0.md](file:///d:/Atemp/cc/ecommerce-store/.trae/documents/phase_reports/20260602_project_progress_report_v2.0.md) | 📦 已归档 |
+| DOC-PROG-2026-003 | 项目进度汇报（Phase 0-4 + Post Phase 4 优化完成） | v3.0 | 2026-06-03 | Phase 0-4 + Post Phase 4 | [20260603_project_progress_report_v3.0.md](file:///d:/Atemp/cc/ecommerce-store/.trae/documents/phase_reports/20260603_project_progress_report_v3.0.md) | ✅ 最新 |
+| DOC-FIX-2026-001 | Phase 2 Bug 修复报告 | v1.0 | 2026-06-01 | Phase 2 | [20260601_phase2_bug_fix_report_v1.0.md](file:///d:/Atemp/cc/ecommerce-store/.trae/documents/phase_reports/20260601_phase2_bug_fix_report_v1.0.md) | 📦 已归档 |
+| DOC-FIX-2026-002 | Phase 3 Bug 修复报告 | v1.0 | 2026-06-02 | Phase 3 | [20260602_phase3_bug_fix_report_v1.0.md](file:///d:/Atemp/cc/ecommerce-store/.trae/documents/phase_reports/20260602_phase3_bug_fix_report_v1.0.md) | 📦 已归档 |
+| DOC-FIX-2026-003 | Post Phase 4 Bug 修复与功能优化报告 | v1.0 | 2026-06-03 | Post Phase 4 | [20260603_post_phase4_bug_fix_report_v1.0.md](file:///d:/Atemp/cc/ecommerce-store/.trae/documents/phase_reports/20260603_post_phase4_bug_fix_report_v1.0.md) | ✅ 最新 |
 
 ### 2.3 通知文档
 
@@ -139,11 +149,11 @@ ls -la .trae/documents/phase_reports/ | sort
 
 | 字段 | 值 |
 |------|-----|
-| **存档编号** | ARC-REC-2026-002 |
-| **存档时间** | 2026-06-02 |
-| **存档文档** | DOC-PROG-2026-002, DOC-FIX-2026-002, NOTIFY-2026-002 |
-| **存档阶段** | Phase 3 完成 |
-| **关联 Commit** | `65e0249`, `dcb1e18`, `fdf11dd`, `0c69e4c`, *Phase 3 待提交* |
+| **存档编号** | ARC-REC-2026-003 |
+| **存档时间** | 2026-06-03 |
+| **存档文档** | DOC-PROG-2026-003, DOC-FIX-2026-003 |
+| **存档阶段** | Post Phase 4 Bug 修复与优化完成 |
+| **关联 Commit** | `dfa6aeb`, `1d1db82`, `58575a0`, `65e0249`, `dcb1e18`, `fdf11dd`, `0c69e4c` |
 | **存档操作人** | AI 开发助手 |
 | **审核状态** | 待审核 |
 
@@ -153,12 +163,14 @@ ls -la .trae/documents/phase_reports/ | sort
 |------|----------|----------|----------|----------|
 | 1 | DOC-MAIN-001 | 电商独立站项目计划 | [ecommerce_store_plan.md](file:///d:/Atemp/cc/ecommerce-store/.trae/documents/ecommerce_store_plan.md) | ✅ 已存档 |
 | 2 | DOC-PROG-2026-001 | 项目进度汇报（Phase 0-2 完成） | [20260601_project_progress_report_v1.0.md](file:///d:/Atemp/cc/ecommerce-store/.trae/documents/phase_reports/20260601_project_progress_report_v1.0.md) | 📦 已归档 |
-| 3 | DOC-PROG-2026-002 | 项目进度汇报（Phase 0-3 完成） | [20260602_project_progress_report_v2.0.md](file:///d:/Atemp/cc/ecommerce-store/.trae/documents/phase_reports/20260602_project_progress_report_v2.0.md) | ✅ 已存档 |
-| 4 | DOC-FIX-2026-001 | Phase 2 Bug 修复报告 | [20260601_phase2_bug_fix_report_v1.0.md](file:///d:/Atemp/cc/ecommerce-store/.trae/documents/phase_reports/20260601_phase2_bug_fix_report_v1.0.md) | ✅ 已存档 |
-| 5 | DOC-FIX-2026-002 | Phase 3 Bug 修复报告 | [20260602_phase3_bug_fix_report_v1.0.md](file:///d:/Atemp/cc/ecommerce-store/.trae/documents/phase_reports/20260602_phase3_bug_fix_report_v1.0.md) | ✅ 已存档 |
-| 6 | NOTIFY-2026-001 | Phase 2 完成通知 | [NOTIFY-2026-001_phase2_complete.md](file:///d:/Atemp/cc/ecommerce-store/.trae/documents/notifications/NOTIFY-2026-001_phase2_complete.md) | ✅ 已存档 |
-| 7 | NOTIFY-2026-002 | Phase 3 完成通知 | [NOTIFY-2026-002_phase3_complete.md](file:///d:/Atemp/cc/ecommerce-store/.trae/documents/notifications/NOTIFY-2026-002_phase3_complete.md) | ✅ 已存档 |
-| 8 | ARC-IDX-2026-001 | 文档存档索引 | [archive_index.md](file:///d:/Atemp/cc/ecommerce-store/.trae/documents/archive/archive_index.md) | ✅ 已存档 |
+| 3 | DOC-PROG-2026-002 | 项目进度汇报（Phase 0-3 完成） | [20260602_project_progress_report_v2.0.md](file:///d:/Atemp/cc/ecommerce-store/.trae/documents/phase_reports/20260602_project_progress_report_v2.0.md) | 📦 已归档 |
+| 4 | DOC-PROG-2026-003 | 项目进度汇报（Phase 0-4 + Post Phase 4 优化完成） | [20260603_project_progress_report_v3.0.md](file:///d:/Atemp/cc/ecommerce-store/.trae/documents/phase_reports/20260603_project_progress_report_v3.0.md) | ✅ 已存档 |
+| 5 | DOC-FIX-2026-001 | Phase 2 Bug 修复报告 | [20260601_phase2_bug_fix_report_v1.0.md](file:///d:/Atemp/cc/ecommerce-store/.trae/documents/phase_reports/20260601_phase2_bug_fix_report_v1.0.md) | 📦 已归档 |
+| 6 | DOC-FIX-2026-002 | Phase 3 Bug 修复报告 | [20260602_phase3_bug_fix_report_v1.0.md](file:///d:/Atemp/cc/ecommerce-store/.trae/documents/phase_reports/20260602_phase3_bug_fix_report_v1.0.md) | 📦 已归档 |
+| 7 | DOC-FIX-2026-003 | Post Phase 4 Bug 修复与功能优化报告 | [20260603_post_phase4_bug_fix_report_v1.0.md](file:///d:/Atemp/cc/ecommerce-store/.trae/documents/phase_reports/20260603_post_phase4_bug_fix_report_v1.0.md) | ✅ 已存档 |
+| 8 | NOTIFY-2026-001 | Phase 2 完成通知 | [NOTIFY-2026-001_phase2_complete.md](file:///d:/Atemp/cc/ecommerce-store/.trae/documents/notifications/NOTIFY-2026-001_phase2_complete.md) | ✅ 已存档 |
+| 9 | NOTIFY-2026-002 | Phase 3 完成通知 | [NOTIFY-2026-002_phase3_complete.md](file:///d:/Atemp/cc/ecommerce-store/.trae/documents/notifications/NOTIFY-2026-002_phase3_complete.md) | ✅ 已存档 |
+| 10 | ARC-IDX-2026-001 | 文档存档索引 | [archive_index.md](file:///d:/Atemp/cc/ecommerce-store/.trae/documents/archive/archive_index.md) | ✅ 已存档 |
 
 ---
 
@@ -199,9 +211,10 @@ ls -la .trae/documents/phase_reports/ | sort
 |------|------|--------|----------|
 | v1.0 | 2026-06-01 | AI 开发助手 | 初始版本，记录 Phase 0-2 文档存档 |
 | v1.1 | 2026-06-02 | AI 开发助手 | 更新 Phase 3 完成的文档：项目进度汇报 v2.0、Phase 3 Bug 修复报告、Phase 3 完成通知 |
+| v1.2 | 2026-06-03 | AI 开发助手 | 更新 Post Phase 4 完成的文档：项目进度汇报 v3.0、Post Phase 4 Bug 修复与功能优化报告；更新目录结构、存档清单和存档记录 |
 
 ---
 
-**文档版本**: v1.1  
+**文档版本**: v1.2  
 **创建日期**: 2026-06-01  
-**最后更新**: 2026-06-02
+**最后更新**: 2026-06-03
