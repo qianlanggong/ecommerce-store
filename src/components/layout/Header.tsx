@@ -1,6 +1,6 @@
-import { Link } from 'react-router-dom'
-import { ShoppingCart, User, Search, Menu, X } from 'lucide-react'
-import { useState } from 'react'
+import { Link, useNavigate } from 'react-router-dom'
+import { ShoppingCart, User, Search, Menu, X, LogOut, ShoppingBag, Heart, Settings, ChevronDown } from 'lucide-react'
+import { useState, useRef, useEffect } from 'react'
 import { useTranslation } from 'react-i18next'
 import { LanguageSwitcher } from '@/components/locale/LanguageSwitcher'
 import { useLocale } from '@/hooks/useLocale'
@@ -8,17 +8,47 @@ import { NAVIGATION_ITEMS } from '@/lib/constants'
 import { cn } from '@/lib/utils'
 import { useCartStore } from '@/stores/cartStore'
 import { useCartActions } from '@/hooks/useCartActions'
+import { useAuthState, useLogout } from '@/services/userService'
 
 export function Header() {
   const { t } = useTranslation()
   const { localizePath } = useLocale()
+  const navigate = useNavigate()
   const [isMenuOpen, setIsMenuOpen] = useState(false)
+  const [isUserMenuOpen, setIsUserMenuOpen] = useState(false)
   const { openDrawer } = useCartStore()
   const { totalQuantity } = useCartActions()
+  const { customer, isAuthenticated } = useAuthState()
+  const logout = useLogout()
+  const userMenuRef = useRef<HTMLDivElement>(null)
+
+  useEffect(() => {
+    function handleClickOutside(event: MouseEvent) {
+      if (userMenuRef.current && !userMenuRef.current.contains(event.target as Node)) {
+        setIsUserMenuOpen(false)
+      }
+    }
+    document.addEventListener('mousedown', handleClickOutside)
+    return () => document.removeEventListener('mousedown', handleClickOutside)
+  }, [])
 
   const handleCartClick = (e: React.MouseEvent) => {
     e.preventDefault()
     openDrawer()
+  }
+
+  const handleLogout = async () => {
+    setIsUserMenuOpen(false)
+    await logout.mutateAsync()
+    navigate(localizePath('/'))
+  }
+
+  const toggleUserMenu = () => {
+    if (!isAuthenticated) {
+      navigate(localizePath('/account/login'))
+    } else {
+      setIsUserMenuOpen(!isUserMenuOpen)
+    }
   }
 
   return (
@@ -72,13 +102,86 @@ export function Header() {
               )}
             </button>
 
-            <Link
-              to={localizePath('/account')}
-              className="group text-charcoal hover:text-primary hover:bg-cream hidden rounded-full p-3 transition-all md:block"
-              aria-label={t('navigation.account')}
-            >
-              <User size={20} className="transition-transform group-hover:scale-110" />
-            </Link>
+            <div ref={userMenuRef} className="relative hidden md:block">
+              <button
+                type="button"
+                onClick={toggleUserMenu}
+                className={cn(
+                  'group text-charcoal hover:text-primary hover:bg-cream flex items-center gap-2 rounded-full p-3 transition-all',
+                  isUserMenuOpen && 'bg-cream',
+                )}
+                aria-label={t('navigation.account')}
+              >
+                <User size={20} className="transition-transform group-hover:scale-110" />
+                {isAuthenticated && (
+                  <ChevronDown
+                    size={16}
+                    className={cn(
+                      'transition-transform duration-300',
+                      isUserMenuOpen && 'rotate-180',
+                    )}
+                  />
+                )}
+              </button>
+
+              {isUserMenuOpen && isAuthenticated && (
+                <div className="shadow-luxury border-luxury absolute right-0 mt-2 w-56 overflow-hidden rounded-xl bg-white py-2">
+                  <div className="border-cream/50 px-4 py-3 border-b">
+                    <p className="font-display text-charcoal text-sm font-semibold">
+                      {customer?.displayName}
+                    </p>
+                    <p className="font-body text-muted-foreground truncate text-xs">
+                      {customer?.email}
+                    </p>
+                  </div>
+                  <div className="py-1">
+                    <Link
+                      to={localizePath('/account')}
+                      onClick={() => setIsUserMenuOpen(false)}
+                      className="font-body text-charcoal hover:bg-cream flex items-center gap-3 px-4 py-2.5 text-sm transition-colors"
+                    >
+                      <User size={18} />
+                      {t('navigation.account')}
+                    </Link>
+                    <Link
+                      to={localizePath('/account/orders')}
+                      onClick={() => setIsUserMenuOpen(false)}
+                      className="font-body text-charcoal hover:bg-cream flex items-center gap-3 px-4 py-2.5 text-sm transition-colors"
+                    >
+                      <ShoppingBag size={18} />
+                      {t('navigation.orders')}
+                    </Link>
+                    <Link
+                      to={localizePath('/favorites')}
+                      onClick={() => setIsUserMenuOpen(false)}
+                      className="font-body text-charcoal hover:bg-cream flex items-center gap-3 px-4 py-2.5 text-sm transition-colors"
+                    >
+                      <Heart size={18} />
+                      {t('navigation.favorites')}
+                    </Link>
+                    <Link
+                      to={localizePath('/account/settings')}
+                      onClick={() => setIsUserMenuOpen(false)}
+                      className="font-body text-charcoal hover:bg-cream flex items-center gap-3 px-4 py-2.5 text-sm transition-colors"
+                    >
+                      <Settings size={18} />
+                      {t('navigation.settings')}
+                    </Link>
+                  </div>
+                  <div className="border-cream/50 pt-1 border-t">
+                    <button
+                      type="button"
+                      onClick={handleLogout}
+                      className="font-body text-wine hover:bg-wine/10 flex w-full items-center gap-3 px-4 py-2.5 text-sm transition-colors"
+                      disabled={logout.isPending}
+                    >
+                      <LogOut size={18} />
+                      {t('navigation.logout')}
+                    </button>
+                  </div>
+                </div>
+              )}
+            </div>
 
             <div className="hidden md:block">
               <LanguageSwitcher />
@@ -132,14 +235,36 @@ export function Header() {
                   </span>
                 )}
               </button>
-              <Link
-                to={localizePath('/account')}
-                className="font-body text-charcoal hover:text-primary flex items-center gap-3 text-base transition-colors"
-                onClick={() => setIsMenuOpen(false)}
-              >
-                <User size={20} />
-                {t('navigation.account')}
-              </Link>
+              {isAuthenticated ? (
+                <>
+                  <Link
+                    to={localizePath('/account')}
+                    className="font-body text-charcoal hover:text-primary flex items-center gap-3 text-base transition-colors"
+                    onClick={() => setIsMenuOpen(false)}
+                  >
+                    <User size={20} />
+                    {t('navigation.account')}
+                  </Link>
+                  <button
+                    type="button"
+                    onClick={handleLogout}
+                    className="font-body text-wine hover:text-wine/80 flex items-center gap-3 text-base transition-colors"
+                    disabled={logout.isPending}
+                  >
+                    <LogOut size={20} />
+                    {t('navigation.logout')}
+                  </button>
+                </>
+              ) : (
+                <Link
+                  to={localizePath('/account/login')}
+                  className="font-body text-charcoal hover:text-primary flex items-center gap-3 text-base transition-colors"
+                  onClick={() => setIsMenuOpen(false)}
+                >
+                  <User size={20} />
+                  {t('navigation.login')}
+                </Link>
+              )}
               <LanguageSwitcher />
             </div>
           </nav>

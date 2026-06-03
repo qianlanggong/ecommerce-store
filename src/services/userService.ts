@@ -1,14 +1,12 @@
 import { useQuery, useMutation, useQueryClient } from '@tanstack/react-query'
 import { adapter } from './adapters/factory'
+import { useUserStore } from '@/stores/userStore'
 import type {
   CustomerCreateInput,
   CustomerUpdateInput,
   MailingAddressInput,
   AuthState,
 } from '@/types'
-
-const ACCESS_TOKEN_STORAGE_KEY = 'customer_access_token'
-const ACCESS_TOKEN_EXPIRES_AT_STORAGE_KEY = 'customer_access_token_expires_at'
 
 export const userKeys = {
   all: ['user'] as const,
@@ -18,43 +16,35 @@ export const userKeys = {
 }
 
 function getAccessToken(): string | null {
-  const token = localStorage.getItem(ACCESS_TOKEN_STORAGE_KEY)
-  const expiresAt = localStorage.getItem(ACCESS_TOKEN_EXPIRES_AT_STORAGE_KEY)
-
-  if (token && expiresAt) {
-    const now = new Date()
-    const expiry = new Date(expiresAt)
-    if (now >= expiry) {
-      clearAccessToken()
-      return null
-    }
-  }
-
-  return token
+  return useUserStore.getState().getValidAccessToken()
 }
 
 function setAccessToken(token: string, expiresAt: string): void {
-  localStorage.setItem(ACCESS_TOKEN_STORAGE_KEY, token)
-  localStorage.setItem(ACCESS_TOKEN_EXPIRES_AT_STORAGE_KEY, expiresAt)
+  useUserStore.getState().setAccessToken(token, expiresAt)
 }
 
 function clearAccessToken(): void {
-  localStorage.removeItem(ACCESS_TOKEN_STORAGE_KEY)
-  localStorage.removeItem(ACCESS_TOKEN_EXPIRES_AT_STORAGE_KEY)
+  useUserStore.getState().clearUser()
 }
 
 export function useIsAuthenticated(): boolean {
-  return !!getAccessToken()
+  return useUserStore((state) => {
+    if (!state.accessToken || !state.accessTokenExpiresAt) return false
+    const now = new Date()
+    const expiry = new Date(state.accessTokenExpiresAt)
+    return now < expiry
+  })
 }
 
 export function useCustomer() {
-  const accessToken = getAccessToken()
+  const accessToken = useUserStore((state) => state.getValidAccessToken())
 
   return useQuery({
     queryKey: userKeys.profile(),
     queryFn: async () => {
-      if (!accessToken) return null
-      return adapter.getCustomer(accessToken)
+      const currentAccessToken = useUserStore.getState().getValidAccessToken()
+      if (!currentAccessToken) return null
+      return adapter.getCustomer(currentAccessToken)
     },
     enabled: !!accessToken,
     staleTime: 5 * 60 * 1000,
@@ -80,6 +70,9 @@ export function useLogin() {
   return useMutation({
     mutationFn: async ({ email, password }: { email: string; password: string }) => {
       const result = await adapter.login(email, password)
+      if (result.userErrors && result.userErrors.length > 0) {
+        throw new Error(result.userErrors[0].message || 'Login failed')
+      }
       if (result.customerAccessToken) {
         setAccessToken(result.customerAccessToken.accessToken, result.customerAccessToken.expiresAt)
       }
@@ -110,16 +103,17 @@ export function useLogout() {
 
 export function useUpdateCustomer() {
   const queryClient = useQueryClient()
-  const accessToken = getAccessToken()
 
   return useMutation({
     mutationFn: (input: CustomerUpdateInput) => {
+      const accessToken = useUserStore.getState().getValidAccessToken()
       if (!accessToken) throw new Error('Not authenticated')
       return adapter.updateCustomer(accessToken, input)
     },
     onSuccess: (result) => {
       if (result.customer) {
         queryClient.setQueryData(userKeys.profile(), result.customer)
+        useUserStore.getState().setCustomer(result.customer)
       }
     },
   })
@@ -140,10 +134,10 @@ export function useResetPassword() {
 
 export function useCreateAddress() {
   const queryClient = useQueryClient()
-  const accessToken = getAccessToken()
 
   return useMutation({
     mutationFn: (address: MailingAddressInput) => {
+      const accessToken = useUserStore.getState().getValidAccessToken()
       if (!accessToken) throw new Error('Not authenticated')
       return adapter.createCustomerAddress(accessToken, address)
     },
@@ -155,10 +149,10 @@ export function useCreateAddress() {
 
 export function useUpdateAddress() {
   const queryClient = useQueryClient()
-  const accessToken = getAccessToken()
 
   return useMutation({
     mutationFn: ({ addressId, address }: { addressId: string; address: MailingAddressInput }) => {
+      const accessToken = useUserStore.getState().getValidAccessToken()
       if (!accessToken) throw new Error('Not authenticated')
       return adapter.updateCustomerAddress(accessToken, addressId, address)
     },
@@ -170,10 +164,10 @@ export function useUpdateAddress() {
 
 export function useDeleteAddress() {
   const queryClient = useQueryClient()
-  const accessToken = getAccessToken()
 
   return useMutation({
     mutationFn: (addressId: string) => {
+      const accessToken = useUserStore.getState().getValidAccessToken()
       if (!accessToken) throw new Error('Not authenticated')
       return adapter.deleteCustomerAddress(accessToken, addressId)
     },
@@ -185,29 +179,31 @@ export function useDeleteAddress() {
 
 export function useSetDefaultAddress() {
   const queryClient = useQueryClient()
-  const accessToken = getAccessToken()
 
   return useMutation({
     mutationFn: (addressId: string) => {
+      const accessToken = useUserStore.getState().getValidAccessToken()
       if (!accessToken) throw new Error('Not authenticated')
       return adapter.updateDefaultCustomerAddress(accessToken, addressId)
     },
     onSuccess: (result) => {
       if (result.customer) {
         queryClient.setQueryData(userKeys.profile(), result.customer)
+        useUserStore.getState().setCustomer(result.customer)
       }
     },
   })
 }
 
 export function useOrders(first: number = 10) {
-  const accessToken = getAccessToken()
+  const accessToken = useUserStore((state) => state.getValidAccessToken())
 
   return useQuery({
     queryKey: userKeys.orders(),
     queryFn: () => {
-      if (!accessToken) throw new Error('Not authenticated')
-      return adapter.getOrders(accessToken, first)
+      const currentAccessToken = useUserStore.getState().getValidAccessToken()
+      if (!currentAccessToken) throw new Error('Not authenticated')
+      return adapter.getOrders(currentAccessToken, first)
     },
     enabled: !!accessToken,
     staleTime: 2 * 60 * 1000,
@@ -225,12 +221,13 @@ export function useOrder(orderId: string) {
 
 export function useAuthState(): AuthState {
   const { data: customer, isLoading, error } = useCustomer()
-  const accessToken = getAccessToken()
+  const isAuthenticated = useIsAuthenticated()
+  const accessToken = useUserStore((state) => state.accessToken)
 
   return {
     customer: customer || null,
     accessToken,
-    isAuthenticated: !!accessToken && !isLoading && !!customer,
+    isAuthenticated: isAuthenticated && !isLoading && !!customer,
     isLoading,
     error: error?.message || null,
   }

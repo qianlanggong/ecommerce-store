@@ -10,11 +10,14 @@ interface UserState {
   setCustomer: (customer: Customer | null) => void
   setAccessToken: (token: string | null, expiresAt?: string | null) => void
   clearUser: () => void
+  getAccessToken: () => string | null
+  getAccessTokenExpiresAt: () => string | null
+  getValidAccessToken: () => string | null
 }
 
 export const useUserStore = create<UserState>()(
   persist(
-    (set) => ({
+    (set, get) => ({
       customer: null,
       accessToken: null,
       accessTokenExpiresAt: null,
@@ -30,6 +33,19 @@ export const useUserStore = create<UserState>()(
           accessToken: null,
           accessTokenExpiresAt: null,
         }),
+      getAccessToken: () => get().accessToken,
+      getAccessTokenExpiresAt: () => get().accessTokenExpiresAt,
+      getValidAccessToken: () => {
+        const { accessToken, accessTokenExpiresAt } = get()
+        if (!accessToken || !accessTokenExpiresAt) return null
+        const now = new Date()
+        const expiry = new Date(accessTokenExpiresAt)
+        if (now >= expiry) {
+          get().clearUser()
+          return null
+        }
+        return accessToken
+      },
     }),
     {
       name: STORAGE_KEYS.CUSTOMER_ACCESS_TOKEN,

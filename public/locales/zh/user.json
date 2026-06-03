@@ -12,7 +12,12 @@
     "noAccount": "还没有账户？",
     "register": "立即注册",
     "success": "欢迎回来！",
-    "error": "邮箱或密码错误"
+    "error": "邮箱或密码错误",
+    "loading": "加载中...",
+    "redirecting": "正在跳转...",
+    "emailRequired": "请输入邮箱地址",
+    "emailInvalid": "请输入有效的邮箱地址",
+    "passwordRequired": "请输入密码"
   },
   "register": {
     "title": "创建账户",
@@ -32,7 +37,17 @@
     "haveAccount": "已有账户？",
     "login": "立即登录",
     "success": "账户创建成功！",
-    "error": "创建账户失败，请重试。"
+    "error": "创建账户失败，请重试。",
+    "redirecting": "正在跳转...",
+    "firstNameRequired": "请输入名字",
+    "lastNameRequired": "请输入姓氏",
+    "emailRequired": "请输入邮箱地址",
+    "emailInvalid": "请输入有效的邮箱地址",
+    "passwordRequired": "请输入密码",
+    "passwordTooShort": "密码至少需要6个字符",
+    "confirmPasswordRequired": "请确认密码",
+    "passwordsDoNotMatch": "两次输入的密码不一致",
+    "agreeTermsRequired": "请同意服务条款和隐私政策"
   },
   "forgotPassword": {
     "title": "重置密码",
@@ -41,6 +56,31 @@
     "emailPlaceholder": "you@example.com",
     "submit": "发送重置链接",
     "success": "重置链接已发送到您的邮箱！",
+    "successDescription": "请查看您的邮箱，按照说明重置密码。",
+    "backToLogin": "返回登录",
+    "error": "发送重置链接失败，请重试。",
+    "emailRequired": "请输入邮箱地址",
+    "emailInvalid": "请输入有效的邮箱地址"
+  },
+  "resetPassword": {
+    "title": "设置新密码",
+    "description": "请在下方输入您的新密码",
+    "password": "新密码",
+    "passwordPlaceholder": "请输入新密码",
+    "confirmPassword": "确认新密码",
+    "confirmPasswordPlaceholder": "请再次输入新密码",
+    "submit": "重置密码",
+    "success": "密码重置成功！",
+    "redirecting": "正在跳转到登录页...",
+    "error": "重置密码失败，请重试。",
+    "passwordRequired": "请输入新密码",
+    "passwordTooShort": "密码至少需要6个字符",
+    "confirmPasswordRequired": "请确认新密码",
+    "passwordsDoNotMatch": "两次输入的密码不一致",
+    "invalidToken": "重置链接无效或已过期",
+    "invalidLink": "重置链接无效",
+    "invalidLinkDescription": "此密码重置链接无效或已过期。",
+    "tryAgain": "重新申请重置链接",
     "backToLogin": "返回登录"
   },
   "account": {
@@ -52,7 +92,13 @@
     "favorites": "我的收藏",
     "settings": "设置",
     "welcome": "欢迎，{{name}}！",
-    "memberSince": "注册于 {{date}}"
+    "memberSince": "注册于 {{date}}",
+    "loading": "加载中...",
+    "totalOrders": "订单总数",
+    "savedAddresses": "保存的地址",
+    "favoritesCount": "收藏商品",
+    "recentOrders": "最近订单",
+    "viewAll": "查看全部"
   },
   "profile": {
     "title": "个人资料",
@@ -60,7 +106,10 @@
     "lastName": "姓",
     "email": "邮箱",
     "phone": "手机号码",
-    "updateSuccess": "资料更新成功"
+    "updateSuccess": "资料更新成功",
+    "saveChanges": "保存更改",
+    "saved": "已保存",
+    "error": "保存失败"
   },
   "addresses": {
     "title": "地址管理",
@@ -70,6 +119,7 @@
     "setDefault": "设为默认",
     "default": "默认",
     "noAddresses": "暂无保存的地址",
+    "noAddressesDescription": "保存您的收货地址，让结账更快捷。",
     "form": {
       "firstName": "收货人名字",
       "lastName": "收货人姓氏",
@@ -87,22 +137,39 @@
   "orders": {
     "title": "我的订单",
     "noOrders": "暂无订单",
+    "noOrdersDescription": "开始购物，您的订单将显示在这里。",
+    "startShopping": "去购物",
     "orderNumber": "订单号 {{number}}",
     "placedOn": "下单时间 {{date}}",
     "total": "订单金额",
+    "quantity": "数量：{{count}}",
+    "moreItems": "还有 {{count}} 件商品",
     "status": {
       "pending": "待处理",
       "processing": "处理中",
       "shipped": "已发货",
       "delivered": "已送达",
       "cancelled": "已取消",
-      "refunded": "已退款"
+      "refunded": "已退款",
+      "authorized": "已授权",
+      "paid": "已支付",
+      "partially_paid": "部分支付",
+      "partially_refunded": "部分退款",
+      "unpaid": "未支付",
+      "voided": "已作废"
     },
     "viewDetails": "查看详情",
     "trackOrder": "物流追踪"
   },
   "logout": {
+    "title": "退出登录",
     "confirm": "确定要退出登录吗？",
-    "success": "已成功退出登录"
+    "success": "已成功退出登录",
+    "confirmButton": "确认退出"
+  },
+  "favorites": {
+    "noFavorites": "暂无收藏商品",
+    "noFavoritesDescription": "浏览商品并收藏您喜欢的商品。",
+    "browseProducts": "去逛逛"
   }
 }

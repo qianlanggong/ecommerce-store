@@ -12,7 +12,12 @@
     "noAccount": "Don't have an account?",
     "register": "Sign up",
     "success": "Welcome back!",
-    "error": "Invalid email or password"
+    "error": "Invalid email or password",
+    "loading": "Loading...",
+    "redirecting": "Redirecting...",
+    "emailRequired": "Please enter your email",
+    "emailInvalid": "Please enter a valid email",
+    "passwordRequired": "Please enter your password"
   },
   "register": {
     "title": "Create Account",
@@ -32,7 +37,17 @@
     "haveAccount": "Already have an account?",
     "login": "Sign in",
     "success": "Account created successfully!",
-    "error": "Failed to create account. Please try again."
+    "error": "Failed to create account. Please try again.",
+    "redirecting": "Redirecting...",
+    "firstNameRequired": "Please enter your first name",
+    "lastNameRequired": "Please enter your last name",
+    "emailRequired": "Please enter your email",
+    "emailInvalid": "Please enter a valid email",
+    "passwordRequired": "Please enter a password",
+    "passwordTooShort": "Password must be at least 6 characters",
+    "confirmPasswordRequired": "Please confirm your password",
+    "passwordsDoNotMatch": "Passwords do not match",
+    "agreeTermsRequired": "You must agree to the terms and conditions"
   },
   "forgotPassword": {
     "title": "Reset Password",
@@ -41,6 +56,31 @@
     "emailPlaceholder": "you@example.com",
     "submit": "Send Reset Link",
     "success": "Reset link sent to your email!",
+    "successDescription": "Please check your email for instructions on how to reset your password.",
+    "backToLogin": "Back to login",
+    "error": "Failed to send reset link. Please try again.",
+    "emailRequired": "Please enter your email",
+    "emailInvalid": "Please enter a valid email"
+  },
+  "resetPassword": {
+    "title": "Set New Password",
+    "description": "Enter your new password below",
+    "password": "New password",
+    "passwordPlaceholder": "Enter your new password",
+    "confirmPassword": "Confirm new password",
+    "confirmPasswordPlaceholder": "Confirm your new password",
+    "submit": "Reset Password",
+    "success": "Password reset successfully!",
+    "redirecting": "Redirecting to login...",
+    "error": "Failed to reset password. Please try again.",
+    "passwordRequired": "Please enter a new password",
+    "passwordTooShort": "Password must be at least 6 characters",
+    "confirmPasswordRequired": "Please confirm your new password",
+    "passwordsDoNotMatch": "Passwords do not match",
+    "invalidToken": "Invalid or expired reset link",
+    "invalidLink": "Invalid Reset Link",
+    "invalidLinkDescription": "This password reset link is invalid or has expired.",
+    "tryAgain": "Request a new reset link",
     "backToLogin": "Back to login"
   },
   "account": {
@@ -52,7 +92,13 @@
     "favorites": "Favorites",
     "settings": "Settings",
     "welcome": "Welcome, {{name}}!",
-    "memberSince": "Member since {{date}}"
+    "memberSince": "Member since {{date}}",
+    "loading": "Loading...",
+    "totalOrders": "Total Orders",
+    "savedAddresses": "Saved Addresses",
+    "favoritesCount": "Favorites",
+    "recentOrders": "Recent Orders",
+    "viewAll": "View All"
   },
   "profile": {
     "title": "Profile Information",
@@ -60,7 +106,10 @@
     "lastName": "Last name",
     "email": "Email",
     "phone": "Phone number",
-    "updateSuccess": "Profile updated successfully"
+    "updateSuccess": "Profile updated successfully",
+    "saveChanges": "Save Changes",
+    "saved": "Saved",
+    "error": "Failed to save changes"
   },
   "addresses": {
     "title": "Address Book",
@@ -70,6 +119,7 @@
     "setDefault": "Set as Default",
     "default": "Default",
     "noAddresses": "No addresses saved yet",
+    "noAddressesDescription": "Save your shipping addresses for faster checkout.",
     "form": {
       "firstName": "First name",
       "lastName": "Last name",
@@ -87,22 +137,39 @@
   "orders": {
     "title": "My Orders",
     "noOrders": "No orders yet",
+    "noOrdersDescription": "Start shopping to see your orders here.",
+    "startShopping": "Start Shopping",
     "orderNumber": "Order #{{number}}",
     "placedOn": "Placed on {{date}}",
     "total": "Total",
+    "quantity": "Qty: {{count}}",
+    "moreItems": "+{{count}} more items",
     "status": {
       "pending": "Pending",
       "processing": "Processing",
       "shipped": "Shipped",
       "delivered": "Delivered",
       "cancelled": "Cancelled",
-      "refunded": "Refunded"
+      "refunded": "Refunded",
+      "authorized": "Authorized",
+      "paid": "Paid",
+      "partially_paid": "Partially Paid",
+      "partially_refunded": "Partially Refunded",
+      "unpaid": "Unpaid",
+      "voided": "Voided"
     },
     "viewDetails": "View Details",
     "trackOrder": "Track Order"
   },
   "logout": {
+    "title": "Log Out",
     "confirm": "Are you sure you want to log out?",
-    "success": "Logged out successfully"
+    "success": "Logged out successfully",
+    "confirmButton": "Log Out"
+  },
+  "favorites": {
+    "noFavorites": "No favorites yet",
+    "noFavoritesDescription": "Browse products and save your favorites for later.",
+    "browseProducts": "Browse Products"
   }
 }

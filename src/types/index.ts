@@ -59,6 +59,12 @@ export type {
   DiscountApplication,
   DiscountApplicationConnection,
 } from './order'
+export {
+  OrderFinancialStatus,
+  OrderFulfillmentStatus,
+  OrderCancelReason,
+  FulfillmentStatus,
+} from './order'
 
 export type { Locale } from './locale'
 export { DEFAULT_LOCALE, SUPPORTED_LOCALES, LOCALES } from './locale'

@@ -33,6 +33,37 @@ import { delay } from '@/lib/utils'
 
 const mockCarts = new Map<string, Cart>()
 
+const TEST_ACCOUNTS = [
+  {
+    email: 'demo@example.com',
+    password: 'demo123456',
+    customer: {
+      id: 'gid://shopify/Customer/123',
+      email: 'demo@example.com',
+      firstName: 'Demo',
+      lastName: 'User',
+      displayName: 'Demo User',
+      acceptsMarketing: true,
+      numberOfOrders: 5,
+      tags: ['vip'],
+    },
+  },
+  {
+    email: 'admin@example.com',
+    password: 'admin123',
+    customer: {
+      id: 'gid://shopify/Customer/456',
+      email: 'admin@example.com',
+      firstName: 'Admin',
+      lastName: 'User',
+      displayName: 'Admin User',
+      acceptsMarketing: false,
+      numberOfOrders: 12,
+      tags: ['admin'],
+    },
+  },
+]
+
 function findVariantById(variantId: string): ProductVariant | null {
   const products = getAllMockProducts()
   for (const product of products) {
@@ -370,12 +401,37 @@ export function createMockAdapter(): IEcommerceAdapter {
       email: string,
       password: string,
     ): Promise<{ customerAccessToken?: CustomerAccessToken; userErrors: UserError[] }> {
-      void email
-      void password
-      await delay(300)
+      await delay(500)
+
+      const account = TEST_ACCOUNTS.find(
+        (acc) => acc.email.toLowerCase() === email.toLowerCase(),
+      )
+
+      if (!account) {
+        return {
+          userErrors: [
+            {
+              field: ['email'],
+              message: 'Invalid email or password',
+            },
+          ],
+        }
+      }
+
+      if (account.password !== password) {
+        return {
+          userErrors: [
+            {
+              field: ['password'],
+              message: 'Invalid email or password',
+            },
+          ],
+        }
+      }
+
       return {
         customerAccessToken: {
-          accessToken: `mock-token-${Date.now()}`,
+          accessToken: `mock-token-${Date.now()}-${account.customer.id}`,
           expiresAt: new Date(Date.now() + 30 * 24 * 60 * 60 * 1000).toISOString(),
         },
         userErrors: [],
@@ -390,21 +446,28 @@ export function createMockAdapter(): IEcommerceAdapter {
     async getCustomer(accessToken: string): Promise<Customer | null> {
       void accessToken
       await delay(200)
+
       const now = new Date().toISOString()
+      let customerData = TEST_ACCOUNTS[0].customer
+
+      if (accessToken.includes('Customer/456')) {
+        customerData = TEST_ACCOUNTS[1].customer
+      }
+
       return {
-        id: `gid://shopify/Customer/123`,
-        email: 'customer@example.com',
-        firstName: 'John',
-        lastName: 'Doe',
-        displayName: 'John Doe',
+        id: customerData.id,
+        email: customerData.email,
+        firstName: customerData.firstName,
+        lastName: customerData.lastName,
+        displayName: customerData.displayName,
         createdAt: now,
         updatedAt: now,
-        acceptsMarketing: false,
+        acceptsMarketing: customerData.acceptsMarketing,
         orders: { edges: [], pageInfo: { hasNextPage: false, hasPreviousPage: false } },
         addresses: { edges: [] },
         defaultAddress: null,
-        numberOfOrders: 0,
-        tags: [],
+        numberOfOrders: customerData.numberOfOrders,
+        tags: customerData.tags,
       }
     },
 
