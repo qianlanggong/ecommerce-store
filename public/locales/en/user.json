@@ -19,6 +19,9 @@
     "emailInvalid": "Please enter a valid email",
     "passwordRequired": "Please enter your password"
   },
+  "common": {
+    "signedIn": "Signed in as {{email}}"
+  },
   "register": {
     "title": "Create Account",
     "description": "Join us today",
@@ -144,6 +147,7 @@
     "total": "Total",
     "quantity": "Qty: {{count}}",
     "moreItems": "+{{count}} more items",
+    "orderNotFound": "Order not found",
     "status": {
       "pending": "Pending",
       "processing": "Processing",
@@ -156,7 +160,14 @@
       "partially_paid": "Partially Paid",
       "partially_refunded": "Partially Refunded",
       "unpaid": "Unpaid",
-      "voided": "Voided"
+      "voided": "Voided",
+      "fulfilled": "Fulfilled",
+      "null": "Unfulfilled",
+      "partial": "Partial",
+      "restocked": "Restocked",
+      "in_progress": "In Progress",
+      "open": "Open",
+      "unfulfilled": "Unfulfilled"
     },
     "viewDetails": "View Details",
     "trackOrder": "Track Order"

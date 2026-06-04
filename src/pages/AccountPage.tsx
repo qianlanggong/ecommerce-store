@@ -352,6 +352,7 @@ export default function AccountPage() {
                       index={index}
                       locale={locale}
                       t={t}
+                      localizePath={localizePath}
                       getStatusColor={getStatusColor}
                     />
                   ))}
@@ -646,11 +647,14 @@ interface OrderCardProps {
   index: number
   locale: string
   t: (key: string, options?: Record<string, unknown>) => string
+  localizePath: (path: string) => string
   getStatusColor: (status: OrderFinancialStatus | OrderFulfillmentStatus) => string
 }
 
-function OrderCard({ order, index, locale, t, getStatusColor }: OrderCardProps) {
+function OrderCard({ order, index, locale, t, localizePath, getStatusColor }: OrderCardProps) {
   const items = order.lineItems.edges.map((edge) => edge.node)
+  const encodedOrderId = encodeURIComponent(order.id)
+  const orderDetailPath = localizePath(`/account/orders/${encodedOrderId}`)
 
   return (
     <div
@@ -680,14 +684,12 @@ function OrderCard({ order, index, locale, t, getStatusColor }: OrderCardProps) 
           <p className="font-display text-charcoal text-xl font-bold">
             {formatMoney(parseFloat(order.currentTotalPrice.amount), order.currentTotalPrice.currencyCode)}
           </p>
-          <a
-            href={order.statusPageUrl}
-            target="_blank"
-            rel="noopener noreferrer"
+          <Link
+            to={orderDetailPath}
             className="bg-gradient-gold font-body text-cream shadow-luxury hover:shadow-luxury-hover rounded-xl px-4 py-2 text-sm font-semibold transition-all duration-300 hover:-translate-y-0.5"
           >
             {t('orders.viewDetails')}
-          </a>
+          </Link>
         </div>
       </div>
 

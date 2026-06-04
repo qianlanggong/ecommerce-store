@@ -1,5 +1,13 @@
 import type { OrderConnection } from './order'
 
+/**
+ * 客户接口
+ *
+ * 定义用户的完整信息，包含基本资料、地址、
+ * 订单历史等。
+ *
+ * @interface Customer
+ */
 export interface Customer {
   id: string
   email: string
@@ -17,38 +25,70 @@ export interface Customer {
   tags: string[]
 }
 
+/**
+ * 邮寄地址接口
+ *
+ * 定义收货地址/账单地址的完整结构。
+ * 支持多级行政区划，适配不同国家的地址格式。
+ *
+ * @interface MailingAddress
+ */
 export interface MailingAddress {
-  id: string
+  id?: string
   firstName?: string
   lastName?: string
   phone?: string
   company?: string
-  address1: string
+  address1?: string
   address2?: string
-  city: string
+  city?: string
   province?: string
   provinceCode?: string
-  zip: string
-  country: string
-  countryCode: string
-  name: string
+  zip?: string
+  country?: string
+  countryCode?: string
+  name?: string
 }
 
 export interface MailingAddressConnection {
   edges: Array<{ node: MailingAddress }>
 }
 
+/**
+ * 客户访问令牌接口
+ *
+ * 登录成功后返回的访问令牌及其过期时间。
+ * 用于后续需要认证的 API 调用。
+ *
+ * @interface CustomerAccessToken
+ */
 export interface CustomerAccessToken {
   accessToken: string
   expiresAt: string
 }
 
+/**
+ * 客户操作错误接口
+ *
+ * 用户操作（注册、登录等）失败时返回的错误信息。
+ * field 字段指示错误发生的具体字段路径。
+ *
+ * @interface CustomerUserError
+ */
 export interface CustomerUserError {
   field: string[]
   message: string
   code: CustomerErrorCode
 }
 
+/**
+ * 客户错误代码枚举
+ *
+ * 定义所有可能的用户操作错误类型，
+ * 用于前端进行错误提示和处理。
+ *
+ * @enum CustomerErrorCode
+ */
 export enum CustomerErrorCode {
   BLANK = 'BLANK',
   INVALID = 'INVALID',

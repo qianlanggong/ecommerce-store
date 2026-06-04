@@ -59,6 +59,12 @@
     "placeOrder": "提交订单",
     "processing": "处理中..."
   },
+  "discount": {
+    "title": "优惠码",
+    "placeholder": "输入优惠码",
+    "apply": "应用",
+    "applied": "已应用优惠"
+  },
   "success": {
     "title": "感谢您的订购！",
     "description": "您的订单已成功提交。",
@@ -67,9 +73,36 @@
     "continueShopping": "继续购物",
     "viewOrder": "查看订单详情"
   },
+  "failure": {
+    "title": "支付失败",
+    "description": "很抱歉，您的支付未能处理。请重试或使用其他支付方式。",
+    "orderNumber": "订单号：{{number}}",
+    "reason": "原因：{{reason}}",
+    "retry": "重试",
+    "backToCart": "返回购物车",
+    "contactSupport": "联系客服"
+  },
   "errors": {
     "paymentFailed": "支付失败，请重试。",
     "invalidAddress": "请检查您的收货地址。",
     "outOfStock": "部分商品已缺货，请检查购物车。"
-  }
+  },
+  "updateSuccess": "结算信息更新成功",
+  "updateError": "更新结算信息失败",
+  "addItemSuccess": "商品已添加",
+  "addItemError": "添加商品失败",
+  "updateItemSuccess": "商品更新成功",
+  "updateItemError": "更新商品失败",
+  "removeItemSuccess": "商品已移除",
+  "removeItemError": "移除商品失败",
+  "addressUpdateSuccess": "收货地址已更新",
+  "addressUpdateError": "更新收货地址失败",
+  "shippingUpdateSuccess": "配送方式已更新",
+  "shippingUpdateError": "更新配送方式失败",
+  "discountApplySuccess": "优惠码已应用",
+  "discountApplyError": "应用优惠码失败",
+  "discountRemoveSuccess": "优惠码已移除",
+  "discountRemoveError": "移除优惠码失败",
+  "paymentRedirectError": "跳转到支付页面失败",
+  "checkoutCompleteError": "完成结算失败"
 }

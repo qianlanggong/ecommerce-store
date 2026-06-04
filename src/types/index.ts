@@ -66,6 +66,30 @@ export {
   FulfillmentStatus,
 } from './order'
 
+export type {
+  Checkout,
+  CheckoutLineItem,
+  CheckoutLineItemConnection,
+  CheckoutBuyerIdentity,
+  CheckoutBuyerIdentityInput,
+  ShippingRate,
+  AvailableShippingRates,
+  CheckoutDiscountApplication,
+  CheckoutDiscountApplicationConnection,
+  CheckoutDiscountAllocation,
+  CheckoutGiftCard,
+  CheckoutGiftCardConnection,
+  CheckoutAppliedGiftCard,
+  CheckoutAppliedGiftCardConnection,
+  CheckoutCreateInput,
+  CheckoutLineItemInput,
+  CheckoutUpdateInput,
+  CheckoutLineItemUpdateInput,
+  CheckoutUserError,
+  CheckoutResult,
+} from './checkout'
+export { CheckoutErrorCode } from './checkout'
+
 export type { Locale } from './locale'
 export { DEFAULT_LOCALE, SUPPORTED_LOCALES, LOCALES } from './locale'
 export type { LocaleConfig, LocaleState, TranslateOptions } from './locale'

@@ -3,6 +3,19 @@ import type { MailingAddress } from './user'
 
 export type { Money, Image, PageInfo }
 
+/**
+ * 订单接口
+ *
+ * 定义订单的完整数据结构，包含订单基本信息、
+ * 金额明细、商品明细、物流信息、支付状态等。
+ *
+ * 设计说明：
+ * - 金额分为当前值（currentXxx）和原始值（xxx）
+ * - 当前值反映退款、折扣等变更后的实际金额
+ * - 支持部分退款、部分发货等复杂场景
+ *
+ * @interface Order
+ */
 export interface Order {
   id: string
   name: string
@@ -14,26 +27,34 @@ export interface Order {
   currencyCode: string
   currentTotalPrice: Money
   currentSubtotalPrice: Money
-  currentTotalTax: Money
-  totalShippingPrice: Money
-  totalPrice: Money
-  subtotalPrice: Money
-  totalTax: Money
-  totalRefunded: Money
+  currentTotalTax?: Money
+  totalShippingPrice?: Money
+  totalPrice?: Money
+  subtotalPrice?: Money
+  totalTax?: Money
+  totalRefunded?: Money
   customerUrl?: string
   financialStatus: OrderFinancialStatus
   fulfillmentStatus: OrderFulfillmentStatus
   lineItems: OrderLineItemConnection
   shippingAddress?: MailingAddress
   billingAddress?: MailingAddress
-  shippingLines: ShippingLineConnection
-  discountApplications: DiscountApplicationConnection
-  fulfillments: FulfillmentConnection
-  refunds: RefundConnection
-  createdAt: string
-  updatedAt: string
+  shippingLines?: ShippingLineConnection
+  discountApplications?: DiscountApplicationConnection
+  fulfillments?: FulfillmentConnection
+  refunds?: RefundConnection
+  createdAt?: string
+  updatedAt?: string
 }
 
+/**
+ * 订单商品行接口
+ *
+ * 订单中的单个商品条目，包含原价、折扣价、
+ * 税费、折扣分配等详细信息。
+ *
+ * @interface OrderLineItem
+ */
 export interface OrderLineItem {
   id: string
   variantTitle: string
@@ -52,6 +73,7 @@ export interface OrderLineItem {
 
 export interface OrderLineItemConnection {
   edges: Array<{ node: OrderLineItem }>
+  pageInfo?: PageInfo
 }
 
 export interface ShippingLine {
@@ -110,6 +132,7 @@ export interface Fulfillment {
 
 export interface FulfillmentConnection {
   edges: Array<{ node: Fulfillment }>
+  pageInfo?: PageInfo
 }
 
 export interface FulfillmentTrackingInfo {
@@ -176,6 +199,21 @@ export enum OrderCancelReason {
   STAFF = 'staff',
 }
 
+/**
+ * 订单财务状态枚举
+ *
+ * 表示订单的支付状态：
+ * - AUTHORIZED: 已授权（预授权，未实际扣款）
+ * - PAID: 已支付
+ * - PARTIALLY_PAID: 部分支付
+ * - PARTIALLY_REFUNDED: 部分退款
+ * - PENDING: 待支付
+ * - REFUNDED: 已退款
+ * - UNPAID: 未支付
+ * - VOIDED: 已取消（授权取消）
+ *
+ * @enum OrderFinancialStatus
+ */
 export enum OrderFinancialStatus {
   AUTHORIZED = 'AUTHORIZED',
   PAID = 'PAID',
@@ -187,6 +225,21 @@ export enum OrderFinancialStatus {
   VOIDED = 'VOIDED',
 }
 
+/**
+ * 订单履行状态枚举
+ *
+ * 表示订单的发货状态：
+ * - FULFILLED: 已发货
+ * - IN_PROGRESS: 处理中
+ * - ON_HOLD: 暂停
+ * - OPEN: 待处理
+ * - PARTIALLY_FULFILLED: 部分发货
+ * - RESTOCKED: 已退货
+ * - SCHEDULED: 已计划
+ * - UNFULFILLED: 待发货
+ *
+ * @enum OrderFulfillmentStatus
+ */
 export enum OrderFulfillmentStatus {
   FULFILLED = 'FULFILLED',
   IN_PROGRESS = 'IN_PROGRESS',

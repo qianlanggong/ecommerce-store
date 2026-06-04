@@ -59,6 +59,12 @@
     "placeOrder": "Place Order",
     "processing": "Processing..."
   },
+  "discount": {
+    "title": "Discount Code",
+    "placeholder": "Enter discount code",
+    "apply": "Apply",
+    "applied": "Discount Applied"
+  },
   "success": {
     "title": "Thank you for your order!",
     "description": "Your order has been placed successfully.",
@@ -67,9 +73,36 @@
     "continueShopping": "Continue Shopping",
     "viewOrder": "View Order Details"
   },
+  "failure": {
+    "title": "Payment Failed",
+    "description": "We're sorry, but your payment could not be processed. Please try again or use a different payment method.",
+    "orderNumber": "Order number: {{number}}",
+    "reason": "Reason: {{reason}}",
+    "retry": "Try Again",
+    "backToCart": "Back to Cart",
+    "contactSupport": "Contact Support"
+  },
   "errors": {
     "paymentFailed": "Payment failed. Please try again.",
     "invalidAddress": "Please check your shipping address.",
     "outOfStock": "Some items are no longer in stock. Please review your cart."
-  }
+  },
+  "updateSuccess": "Checkout updated successfully",
+  "updateError": "Failed to update checkout",
+  "addItemSuccess": "Item added to checkout",
+  "addItemError": "Failed to add item",
+  "updateItemSuccess": "Item updated successfully",
+  "updateItemError": "Failed to update item",
+  "removeItemSuccess": "Item removed successfully",
+  "removeItemError": "Failed to remove item",
+  "addressUpdateSuccess": "Shipping address updated",
+  "addressUpdateError": "Failed to update shipping address",
+  "shippingUpdateSuccess": "Shipping method updated",
+  "shippingUpdateError": "Failed to update shipping method",
+  "discountApplySuccess": "Discount applied",
+  "discountApplyError": "Failed to apply discount",
+  "discountRemoveSuccess": "Discount removed",
+  "discountRemoveError": "Failed to remove discount",
+  "paymentRedirectError": "Failed to redirect to payment page",
+  "checkoutCompleteError": "Failed to complete checkout"
 }

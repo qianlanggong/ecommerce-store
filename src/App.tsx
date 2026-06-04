@@ -17,6 +17,11 @@ import RegisterPage from '@/pages/RegisterPage'
 import ForgotPasswordPage from '@/pages/ForgotPasswordPage'
 import ResetPasswordPage from '@/pages/ResetPasswordPage'
 import AccountPage from '@/pages/AccountPage'
+import OrdersPage from '@/pages/OrdersPage'
+import OrderDetailPage from '@/pages/OrderDetailPage'
+import CheckoutPage from '@/pages/CheckoutPage'
+import OrderConfirmationPage from '@/pages/OrderConfirmationPage'
+import PaymentFailedPage from '@/pages/PaymentFailedPage'
 import NotFoundPage from '@/pages/NotFoundPage'
 import { useUserStore } from '@/stores/userStore'
 import { useToastStore } from '@/stores/toastStore'
@@ -69,14 +74,24 @@ function AppRoutes() {
         <Route path="/:locale/account/register" element={<RegisterPage />} />
         <Route path="/:locale/account/forgot-password" element={<ForgotPasswordPage />} />
         <Route path="/:locale/account/reset-password" element={<ResetPasswordPage />} />
-        <Route
-          path="/:locale/account"
-          element={
+        <Route path="/:locale/account" element={
             <ProtectedRoute>
               <AccountPage />
             </ProtectedRoute>
-          }
-        />
+          } />
+        <Route path="/:locale/account/orders" element={
+            <ProtectedRoute>
+              <OrdersPage />
+            </ProtectedRoute>
+          } />
+        <Route path="/:locale/account/orders/:orderId" element={
+            <ProtectedRoute>
+              <OrderDetailPage />
+            </ProtectedRoute>
+          } />
+        <Route path="/:locale/checkout" element={<CheckoutPage />} />
+        <Route path="/:locale/checkout/success" element={<OrderConfirmationPage />} />
+        <Route path="/:locale/checkout/failure" element={<PaymentFailedPage />} />
         <Route path="/:locale/favorites" element={<FavoritesPage />} />
         <Route path="/:locale/account/favorites" element={<FavoritesPage />} />
         <Route path="/:locale/*" element={<NotFoundPage />} />

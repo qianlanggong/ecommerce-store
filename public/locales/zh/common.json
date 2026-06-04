@@ -23,7 +23,8 @@
     "buyNow": "立即购买",
     "addToCart": "加入购物车",
     "addToFavorites": "加入收藏",
-    "removeFromFavorites": "取消收藏"
+    "removeFromFavorites": "取消收藏",
+    "retry": "重试"
   },
   "validation": {
     "required": "此字段为必填项",
@@ -90,6 +91,7 @@
     "shippingPolicy": "配送政策",
     "returnPolicy": "退换货政策",
     "privacyPolicy": "隐私政策",
-    "termsOfService": "服务条款"
+    "termsOfService": "服务条款",
+    "help": "需要帮助？"
   }
 }

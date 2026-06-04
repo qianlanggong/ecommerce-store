@@ -23,7 +23,8 @@
     "buyNow": "Buy Now",
     "addToCart": "Add to Cart",
     "addToFavorites": "Add to Favorites",
-    "removeFromFavorites": "Remove from Favorites"
+    "removeFromFavorites": "Remove from Favorites",
+    "retry": "Retry"
   },
   "validation": {
     "required": "This field is required",
@@ -90,6 +91,7 @@
     "shippingPolicy": "Shipping Policy",
     "returnPolicy": "Return Policy",
     "privacyPolicy": "Privacy Policy",
-    "termsOfService": "Terms of Service"
+    "termsOfService": "Terms of Service",
+    "help": "Need Help?"
   }
 }

@@ -19,6 +19,9 @@
     "emailInvalid": "请输入有效的邮箱地址",
     "passwordRequired": "请输入密码"
   },
+  "common": {
+    "signedIn": "已登录为 {{email}}"
+  },
   "register": {
     "title": "创建账户",
     "description": "立即加入我们",
@@ -144,6 +147,7 @@
     "total": "订单金额",
     "quantity": "数量：{{count}}",
     "moreItems": "还有 {{count}} 件商品",
+    "orderNotFound": "订单未找到",
     "status": {
       "pending": "待处理",
       "processing": "处理中",
@@ -156,7 +160,14 @@
       "partially_paid": "部分支付",
       "partially_refunded": "部分退款",
       "unpaid": "未支付",
-      "voided": "已作废"
+      "voided": "已作废",
+      "fulfilled": "已履行",
+      "null": "未履行",
+      "partial": "部分履行",
+      "restocked": "已补货",
+      "in_progress": "处理中",
+      "open": "开放",
+      "unfulfilled": "未履行"
     },
     "viewDetails": "查看详情",
     "trackOrder": "物流追踪"
