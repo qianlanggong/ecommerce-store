@@ -1,5 +1,5 @@
 import { BrowserRouter as Router, Routes, Route, Navigate, useLocation } from 'react-router-dom'
-import { useEffect } from 'react'
+import { useEffect, Suspense, lazy } from 'react'
 import { useTranslation } from 'react-i18next'
 import { QueryProvider } from '@/providers/QueryProvider'
 import { LocaleRouter } from '@/components/locale/LocaleRouter'
@@ -25,6 +25,8 @@ import PaymentFailedPage from '@/pages/PaymentFailedPage'
 import NotFoundPage from '@/pages/NotFoundPage'
 import { useUserStore } from '@/stores/userStore'
 import { useToastStore } from '@/stores/toastStore'
+
+const OrderTrackingPage = lazy(() => import('@/pages/OrderTrackingPage'))
 
 function TokenExpiryListener() {
   const { t } = useTranslation('common')
@@ -94,6 +96,30 @@ function AppRoutes() {
         <Route path="/:locale/checkout/failure" element={<PaymentFailedPage />} />
         <Route path="/:locale/favorites" element={<FavoritesPage />} />
         <Route path="/:locale/account/favorites" element={<FavoritesPage />} />
+        <Route
+          path="/:locale/tracking/:trackingNumber"
+          element={
+            <Suspense fallback={
+              <div className="flex items-center justify-center min-h-[50vh]">
+                <div className="animate-spin rounded-full h-8 w-8 border-b-2 border-primary"></div>
+              </div>
+            }>
+              <OrderTrackingPage />
+            </Suspense>
+          }
+        />
+        <Route
+          path="/:locale/tracking"
+          element={
+            <Suspense fallback={
+              <div className="flex items-center justify-center min-h-[50vh]">
+                <div className="animate-spin rounded-full h-8 w-8 border-b-2 border-primary"></div>
+              </div>
+            }>
+              <OrderTrackingPage />
+            </Suspense>
+          }
+        />
         <Route path="/:locale/*" element={<NotFoundPage />} />
         <Route path="*" element={<NotFoundPage />} />
       </Routes>

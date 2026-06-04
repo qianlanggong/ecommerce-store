@@ -108,3 +108,29 @@ export type {
 export { createAsyncState, formatMoney, formatDate } from './common'
 
 export type { AuthState, LoginInput, ResetPasswordInput } from './user'
+
+export type {
+  TrackingInfo,
+  TrackingEvent,
+  TrackingTimeline,
+  TrackingAddress,
+  TrackingException,
+  TrackingExceptionUpdate,
+  TrackingContactInfo,
+  TrackingDeliveryWindow,
+  TrackingProofOfDelivery,
+  TrackingInfoConnection,
+  TrackingFilter,
+  TrackingUserError,
+  TrackingResult,
+  CarrierInfo,
+  CarrierService,
+  CarrierFeature,
+} from './fulfillment'
+export {
+  TrackingEventType,
+  TrackingExceptionType,
+  TrackingExceptionSeverity,
+  TrackingProofType,
+  TrackingErrorCode,
+} from './fulfillment'

@@ -10,7 +10,7 @@ const isProduction = import.meta.env.PROD
 export const I18N_CONFIG = {
   fallbackLng: DEFAULT_LOCALE,
   supportedLngs: SUPPORTED_LOCALES,
-  ns: ['common', 'home', 'product', 'cart', 'user', 'checkout'],
+  ns: ['common', 'home', 'product', 'cart', 'user', 'checkout', 'fulfillment'],
   defaultNS: 'common',
   debug: !isProduction,
   interpolation: {

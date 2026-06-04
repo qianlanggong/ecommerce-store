@@ -93,5 +93,22 @@
     "privacyPolicy": "Privacy Policy",
     "termsOfService": "Terms of Service",
     "help": "Need Help?"
+  },
+  "meta": {
+    "title": "Maison Artisan - Luxury Ecommerce",
+    "description": "Discover our curated collection of premium artisanal products. Quality craftsmanship, timeless designs, and exceptional customer service.",
+    "keywords": {
+      "luxury": "luxury",
+      "handmade": "handmade",
+      "artisan": "artisan",
+      "premium": "premium",
+      "ecommerce": "ecommerce",
+      "shipping": "shipping",
+      "delivery": "delivery",
+      "package": "package",
+      "product": "product",
+      "tracking": "tracking",
+      "order": "order"
+    }
   }
 }

@@ -35,12 +35,19 @@ import type {
   ShippingRate,
   CheckoutResult,
   CheckoutUserError,
+  TrackingInfoConnection,
+  TrackingResult,
+  TrackingFilter,
+  TrackingUserError,
+  CarrierInfo,
+  Fulfillment,
 } from '@/types'
 import {
   OrderFulfillmentStatus,
   OrderFinancialStatus,
   OrderCancelReason,
   CheckoutErrorCode,
+  TrackingErrorCode,
 } from '@/types'
 import {
   getMockProducts,
@@ -50,6 +57,14 @@ import {
   getMockCollection,
   getAllMockProducts,
 } from '@/mocks/products'
+import {
+  getMockTracking,
+  getMockTrackingsByOrder,
+  getMockCarrierInfo,
+  getMockSupportedCarriers,
+  getMockFulfillmentsByOrder,
+  isValidTrackingNumber,
+} from '@/mocks/fulfillment'
 import { delay } from '@/lib/utils'
 
 // =========================================================================
@@ -1925,6 +1940,237 @@ export function createMockAdapter(): IEcommerceAdapter {
 
       return {
         order,
+        userErrors: [],
+      }
+    },
+
+    // =========================================================================
+    // 物流追踪相关方法（Mock 实现）
+    // =========================================================================
+
+    /**
+     * 根据订单获取物流追踪信息（Mock 实现）
+     *
+     * @param orderId - 订单 ID
+     * @returns 物流追踪信息连接对象
+     */
+    async getTrackingByOrder(orderId: string): Promise<TrackingInfoConnection> {
+      await delay(300)
+      const trackings = getMockTrackingsByOrder(orderId)
+
+      return {
+        edges: trackings.map((tracking) => ({
+          node: tracking,
+          cursor: Buffer.from(tracking.id).toString('base64'),
+        })),
+        pageInfo: {
+          hasNextPage: false,
+          hasPreviousPage: false,
+        },
+        totalCount: trackings.length,
+      }
+    },
+
+    /**
+     * 根据追踪单号获取物流追踪信息（Mock 实现）
+     *
+     * @param trackingNumber - 物流追踪单号
+     * @returns 包含物流追踪信息和可能的错误信息
+     */
+    async getTrackingByNumber(trackingNumber: string): Promise<TrackingResult> {
+      await delay(500)
+
+      if (!trackingNumber || trackingNumber.trim().length === 0) {
+        return {
+          tracking: undefined,
+          userErrors: [
+            {
+              field: ['trackingNumber'],
+              message: 'Tracking number is required',
+              code: TrackingErrorCode.TRACKING_NUMBER_INVALID,
+            },
+          ],
+        }
+      }
+
+      if (!isValidTrackingNumber(trackingNumber)) {
+        return {
+          tracking: undefined,
+          userErrors: [
+            {
+              field: ['trackingNumber'],
+              message: 'Invalid tracking number format',
+              code: TrackingErrorCode.TRACKING_NUMBER_INVALID,
+            },
+          ],
+        }
+      }
+
+      const tracking = getMockTracking(trackingNumber)
+
+      if (!tracking) {
+        return {
+          tracking: undefined,
+          userErrors: [
+            {
+              field: ['trackingNumber'],
+              message: 'Tracking information not found. Please check the tracking number and try again.',
+              code: TrackingErrorCode.TRACKING_NOT_FOUND,
+            },
+          ],
+        }
+      }
+
+      return {
+        tracking,
+        userErrors: [],
+      }
+    },
+
+    /**
+     * 根据 Fulfillment ID 获取物流追踪信息（Mock 实现）
+     *
+     * @param fulfillmentId - Fulfillment ID
+     * @returns 包含物流追踪信息和可能的错误信息
+     */
+    async getTrackingByFulfillment(fulfillmentId: string): Promise<TrackingResult> {
+      await delay(300)
+      void fulfillmentId
+
+      const defaultTracking = getMockTracking('DHL1234567890')
+
+      return {
+        tracking: defaultTracking || undefined,
+        userErrors: [],
+      }
+    },
+
+    /**
+     * 批量查询物流追踪信息（Mock 实现）
+     *
+     * @param filter - 查询筛选条件
+     * @returns 物流追踪信息连接对象
+     */
+    async getTrackings(filter?: TrackingFilter): Promise<TrackingInfoConnection> {
+      await delay(300)
+      void filter
+
+      const sampleNumbers = ['DHL1234567890', 'FX9876543210', 'UPS1357924680']
+      const trackings = sampleNumbers.map((num) => getMockTracking(num)!).filter(Boolean)
+
+      return {
+        edges: trackings.map((tracking) => ({
+          node: tracking,
+          cursor: Buffer.from(tracking.id).toString('base64'),
+        })),
+        pageInfo: {
+          hasNextPage: false,
+          hasPreviousPage: false,
+        },
+        totalCount: trackings.length,
+      }
+    },
+
+    /**
+     * 获取订单的 Fulfillment 列表（Mock 实现）
+     *
+     * @param orderId - 订单 ID
+     * @returns Fulfillment 数组
+     */
+    async getFulfillmentsByOrder(orderId: string): Promise<Fulfillment[]> {
+      await delay(200)
+      return getMockFulfillmentsByOrder(orderId)
+    },
+
+    /**
+     * 获取物流服务商信息（Mock 实现）
+     *
+     * @param carrierCode - 物流服务商代码
+     * @returns 物流服务商信息，如果不支持返回 null
+     */
+    async getCarrierInfo(carrierCode: string): Promise<CarrierInfo | null> {
+      await delay(100)
+      return getMockCarrierInfo(carrierCode)
+    },
+
+    /**
+     * 获取所有支持的物流服务商列表（Mock 实现）
+     *
+     * @returns 支持的物流服务商列表
+     */
+    async getSupportedCarriers(): Promise<CarrierInfo[]> {
+      await delay(100)
+      return getMockSupportedCarriers()
+    },
+
+    /**
+     * 订阅物流追踪更新（Mock 实现）
+     *
+     * @param trackingId - 物流追踪 ID
+     * @param webhookUrl - Webhook 回调 URL（可选）
+     * @param email - 通知邮箱（可选）
+     * @returns 包含订阅结果和可能的错误信息
+     */
+    async subscribeTrackingUpdates(
+      trackingId: string,
+      webhookUrl?: string,
+      email?: string,
+    ): Promise<{ success: boolean; userErrors: TrackingUserError[] }> {
+      await delay(300)
+      void trackingId
+      void webhookUrl
+
+      if (!email || !email.includes('@')) {
+        return {
+          success: false,
+          userErrors: [
+            {
+              field: ['email'],
+              message: 'Valid email is required for subscription',
+              code: TrackingErrorCode.UNKNOWN,
+            },
+          ],
+        }
+      }
+
+      return {
+        success: true,
+        userErrors: [],
+      }
+    },
+
+    /**
+     * 取消物流追踪更新订阅（Mock 实现）
+     *
+     * @param trackingId - 物流追踪 ID
+     * @returns 包含取消结果和可能的错误信息
+     */
+    async unsubscribeTrackingUpdates(
+      trackingId: string,
+    ): Promise<{ success: boolean; userErrors: TrackingUserError[] }> {
+      await delay(200)
+      void trackingId
+
+      return {
+        success: true,
+        userErrors: [],
+      }
+    },
+
+    /**
+     * 刷新物流追踪信息（Mock 实现）
+     *
+     * @param trackingId - 物流追踪 ID
+     * @returns 包含更新后的物流追踪信息和可能的错误信息
+     */
+    async refreshTracking(trackingId: string): Promise<TrackingResult> {
+      await delay(500)
+      void trackingId
+
+      const defaultTracking = getMockTracking('DHL1234567890')
+
+      return {
+        tracking: defaultTracking || undefined,
         userErrors: [],
       }
     },

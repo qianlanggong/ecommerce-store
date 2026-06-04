@@ -93,5 +93,22 @@
     "privacyPolicy": "隐私政策",
     "termsOfService": "服务条款",
     "help": "需要帮助？"
+  },
+  "meta": {
+    "title": "Maison Artisan - 奢侈品电商",
+    "description": "探索我们精选的高端手工商品。精湛工艺，永恒设计，卓越客户服务。",
+    "keywords": {
+      "luxury": "奢侈品",
+      "handmade": "手工",
+      "artisan": "工匠",
+      "premium": "高端",
+      "ecommerce": "电商",
+      "shipping": "配送",
+      "delivery": "送达",
+      "package": "包裹",
+      "product": "商品",
+      "tracking": "追踪",
+      "order": "订单"
+    }
   }
 }

@@ -25,6 +25,12 @@ import type {
   ShippingRate,
   CheckoutResult,
   CheckoutUserError,
+  TrackingInfoConnection,
+  TrackingFilter,
+  TrackingResult,
+  TrackingUserError,
+  CarrierInfo,
+  Fulfillment,
 } from '@/types'
 
 /**
@@ -454,15 +460,120 @@ export interface IEcommerceAdapter {
 
   /**
    * 完成 Checkout
-   * 
+   *
    * 标记 Checkout 为已完成，创建订单。
    * 注意：在 Shopify 无头模式下，通常是跳转到 Shopify 官方支付页面完成支付，
    * 支付完成后 Shopify 会自动创建订单。
-   * 
+   *
    * @param checkoutId - Checkout ID
    * @returns 包含创建的订单对象和可能的错误信息
    */
   completeCheckout(checkoutId: string): Promise<{ order?: Order; userErrors: CheckoutUserError[] }>
+
+  // =========================================================================
+  // 物流追踪相关接口
+  // =========================================================================
+
+  /**
+   * 根据订单获取物流追踪信息
+   *
+   * 根据订单 ID 获取该订单的所有物流追踪信息。
+   * 一个订单可能有多个物流包裹，因此可能返回多个追踪信息。
+   *
+   * @param orderId - 订单 ID
+   * @param accessToken - 用户访问令牌（可选，用于验证权限）
+   * @returns 物流追踪信息连接对象，包含追踪列表和分页信息
+   */
+  getTrackingByOrder(orderId: string, accessToken?: string): Promise<TrackingInfoConnection>
+
+  /**
+   * 根据追踪单号获取物流追踪信息
+   *
+   * 根据物流追踪单号获取详细的物流追踪信息。
+   *
+   * @param trackingNumber - 物流追踪单号
+   * @returns 包含物流追踪信息和可能的错误信息
+   */
+  getTrackingByNumber(trackingNumber: string): Promise<TrackingResult>
+
+  /**
+   * 根据 Fulfillment ID 获取物流追踪信息
+   *
+   * @param fulfillmentId - Fulfillment ID
+   * @returns 包含物流追踪信息和可能的错误信息
+   */
+  getTrackingByFulfillment(fulfillmentId: string): Promise<TrackingResult>
+
+  /**
+   * 批量查询物流追踪信息
+   *
+   * 根据多个查询条件批量获取物流追踪信息。
+   *
+   * @param filter - 查询筛选条件，包括订单 ID、追踪号、状态等
+   * @param accessToken - 用户访问令牌（可选）
+   * @returns 物流追踪信息连接对象
+   */
+  getTrackings(filter?: TrackingFilter, accessToken?: string): Promise<TrackingInfoConnection>
+
+  /**
+   * 获取订单的 Fulfillment 列表
+   *
+   * @param orderId - 订单 ID
+   * @param accessToken - 用户访问令牌（可选）
+   * @returns Fulfillment 列表
+   */
+  getFulfillmentsByOrder(orderId: string, accessToken?: string): Promise<Fulfillment[]>
+
+  /**
+   * 获取物流服务商信息
+   *
+   * 根据物流服务商代码获取详细信息，包括联系电话、官网、服务等。
+   *
+   * @param carrierCode - 物流服务商代码，如 'DHL', 'FEDEX', 'UPS' 等
+   * @returns 物流服务商信息，如果不支持返回 null
+   */
+  getCarrierInfo(carrierCode: string): Promise<CarrierInfo | null>
+
+  /**
+   * 获取所有支持的物流服务商列表
+   *
+   * @returns 支持的物流服务商列表
+   */
+  getSupportedCarriers(): Promise<CarrierInfo[]>
+
+  /**
+   * 订阅物流追踪更新
+   *
+   * 订阅指定物流追踪的更新通知，当物流状态变化时通过 Webhook 或邮件通知。
+   *
+   * @param trackingId - 物流追踪 ID
+   * @param webhookUrl - Webhook 回调 URL（可选）
+   * @param email - 通知邮箱（可选）
+   * @returns 包含订阅结果和可能的错误信息
+   */
+  subscribeTrackingUpdates(
+    trackingId: string,
+    webhookUrl?: string,
+    email?: string,
+  ): Promise<{ success: boolean; userErrors: TrackingUserError[] }>
+
+  /**
+   * 取消物流追踪更新订阅
+   *
+   * @param trackingId - 物流追踪 ID
+   * @returns 包含取消结果和可能的错误信息
+   */
+  unsubscribeTrackingUpdates(trackingId: string): Promise<{ success: boolean; userErrors: TrackingUserError[] }>
+
+  /**
+   * 刷新物流追踪信息
+   *
+   * 强制从物流服务商获取最新的追踪信息。
+   *
+   * @param trackingId - 物流追踪 ID
+   * @returns 包含更新后的物流追踪信息和可能的错误信息
+   */
+  refreshTracking(trackingId: string): Promise<TrackingResult>
 }
 
 /**

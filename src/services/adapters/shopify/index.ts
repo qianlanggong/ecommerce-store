@@ -1,6 +1,7 @@
 /* eslint-disable @typescript-eslint/no-explicit-any */
 import { createStorefrontApiClient } from '@shopify/storefront-api-client'
 import type { IEcommerceAdapter, AdapterConfig } from '../interface'
+import { TrackingErrorCode } from '@/types'
 import type {
   Product,
   ProductConnection,
@@ -26,6 +27,12 @@ import type {
   ShippingRate,
   CheckoutResult,
   CheckoutUserError,
+  TrackingInfoConnection,
+  TrackingResult,
+  TrackingFilter,
+  Fulfillment,
+  CarrierInfo,
+  TrackingUserError,
 } from '@/types'
 
 // =========================================================================
@@ -2303,6 +2310,193 @@ export class ShopifyAdapter implements IEcommerceAdapter {
     return {
       order: result.checkout?.order,
       userErrors: result.checkoutUserErrors || [],
+    }
+  }
+
+  // =========================================================================
+  // 物流追踪相关方法（待实现）
+  // =========================================================================
+
+  /**
+   * 根据订单ID获取物流追踪信息（Shopify 实现）
+   * 
+   * @param orderId - 订单ID
+   * @param accessToken - 用户访问令牌
+   * @returns 物流追踪信息连接
+   */
+  async getTrackingByOrder(orderId: string, accessToken?: string): Promise<TrackingInfoConnection> {
+    // TODO: 实现 Shopify Fulfillment API 调用
+    void orderId
+    void accessToken
+    console.warn('getTrackingByOrder not implemented in ShopifyAdapter')
+    return {
+      edges: [],
+      pageInfo: {
+        hasNextPage: false,
+        hasPreviousPage: false,
+      },
+    }
+  }
+
+  /**
+   * 根据追踪号获取物流追踪信息（Shopify 实现）
+   * 
+   * @param trackingNumber - 物流追踪号
+   * @returns 物流追踪结果
+   */
+  async getTrackingByNumber(trackingNumber: string): Promise<TrackingResult> {
+    // TODO: 实现 Shopify Fulfillment API 调用
+    void trackingNumber
+    console.warn('getTrackingByNumber not implemented in ShopifyAdapter')
+    return {
+      tracking: undefined,
+      userErrors: [
+        {
+          field: ['trackingNumber'],
+          message: 'Tracking not implemented for Shopify adapter yet',
+          code: TrackingErrorCode.TRACKING_UNAVAILABLE,
+        },
+      ],
+    }
+  }
+
+  /**
+   * 根据配送ID获取物流追踪信息（Shopify 实现）
+   * 
+   * @param fulfillmentId - 配送ID
+   * @returns 物流追踪结果
+   */
+  async getTrackingByFulfillment(fulfillmentId: string): Promise<TrackingResult> {
+    // TODO: 实现 Shopify Fulfillment API 调用
+    void fulfillmentId
+    console.warn('getTrackingByFulfillment not implemented in ShopifyAdapter')
+    return {
+      tracking: undefined,
+      userErrors: [],
+    }
+  }
+
+  /**
+   * 获取物流追踪信息列表（Shopify 实现）
+   * 
+   * @param filter - 过滤条件
+   * @param accessToken - 用户访问令牌
+   * @returns 物流追踪信息连接
+   */
+  async getTrackings(filter?: TrackingFilter, accessToken?: string): Promise<TrackingInfoConnection> {
+    // TODO: 实现 Shopify Fulfillment API 调用
+    void filter
+    void accessToken
+    console.warn('getTrackings not implemented in ShopifyAdapter')
+    return {
+      edges: [],
+      pageInfo: {
+        hasNextPage: false,
+        hasPreviousPage: false,
+      },
+    }
+  }
+
+  /**
+   * 根据订单ID获取配送信息（Shopify 实现）
+   * 
+   * @param orderId - 订单ID
+   * @param accessToken - 用户访问令牌
+   * @returns 配送信息数组
+   */
+  async getFulfillmentsByOrder(orderId: string, accessToken?: string): Promise<Fulfillment[]> {
+    // TODO: 实现 Shopify Fulfillment API 调用
+    void orderId
+    void accessToken
+    console.warn('getFulfillmentsByOrder not implemented in ShopifyAdapter')
+    return []
+  }
+
+  /**
+   * 获取物流公司信息（Shopify 实现）
+   * 
+   * @param carrierCode - 物流公司代码
+   * @returns 物流公司信息
+   */
+  async getCarrierInfo(carrierCode: string): Promise<CarrierInfo | null> {
+    // TODO: 实现物流公司信息查询
+    void carrierCode
+    console.warn('getCarrierInfo not implemented in ShopifyAdapter')
+    return null
+  }
+
+  /**
+   * 获取支持的物流公司列表（Shopify 实现）
+   * 
+   * @returns 物流公司信息数组
+   */
+  async getSupportedCarriers(): Promise<CarrierInfo[]> {
+    // TODO: 实现支持的物流公司列表查询
+    console.warn('getSupportedCarriers not implemented in ShopifyAdapter')
+    return []
+  }
+
+  /**
+   * 订阅物流追踪更新（Shopify 实现）
+   * 
+   * @param trackingId - 物流追踪ID
+   * @param webhookUrl - Webhook URL
+   * @param email - 通知邮箱
+   * @returns 订阅结果
+   */
+  async subscribeTrackingUpdates(
+    trackingId: string,
+    webhookUrl?: string,
+    email?: string,
+  ): Promise<{ success: boolean; userErrors: TrackingUserError[] }> {
+    // TODO: 实现物流追踪更新订阅
+    void trackingId
+    void webhookUrl
+    void email
+    console.warn('subscribeTrackingUpdates not implemented in ShopifyAdapter')
+    return {
+      success: false,
+      userErrors: [
+        {
+          field: ['trackingId'],
+          message: 'Subscription not implemented for Shopify adapter yet',
+          code: TrackingErrorCode.TRACKING_UNAVAILABLE,
+        },
+      ],
+    }
+  }
+
+  /**
+   * 取消订阅物流追踪更新（Shopify 实现）
+   * 
+   * @param trackingId - 物流追踪ID
+   * @returns 取消订阅结果
+   */
+  async unsubscribeTrackingUpdates(
+    trackingId: string,
+  ): Promise<{ success: boolean; userErrors: TrackingUserError[] }> {
+    // TODO: 实现取消物流追踪更新订阅
+    void trackingId
+    console.warn('unsubscribeTrackingUpdates not implemented in ShopifyAdapter')
+    return {
+      success: false,
+      userErrors: [],
+    }
+  }
+
+  /**
+   * 刷新物流追踪信息（Shopify 实现）
+   * 
+   * @param trackingId - 物流追踪ID
+   * @returns 刷新后的物流追踪结果
+   */
+  async refreshTracking(trackingId: string): Promise<TrackingResult> {
+    // TODO: 实现刷新物流追踪信息
+    void trackingId
+    console.warn('refreshTracking not implemented in ShopifyAdapter')
+    return {
+      tracking: undefined,
+      userErrors: [],
     }
   }
 }
