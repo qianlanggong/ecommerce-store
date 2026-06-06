@@ -80,15 +80,18 @@ function updateStructuredData(data: Record<string, unknown> | null): void {
 }
 
 function generateAlternateLocales(currentPath: string, locales: string[]): void {
+  // 先清除所有现有的 alternate links
+  const existingLinks = document.head.querySelectorAll<HTMLLinkElement>('link[rel="alternate"]')
+  existingLinks.forEach((link) => document.head.removeChild(link))
+
+  // 为每个 locale 创建新的 alternate link
   locales.forEach((locale) => {
     const href = `${window.location.origin}/${locale}${currentPath}`
-    updateLinkTag('alternate', href)
-    const tag = document.head.querySelector<HTMLLinkElement>(
-      `link[rel="alternate"][href="${href}"]`,
-    )
-    if (tag) {
-      tag.setAttribute('hreflang', locale)
-    }
+    const tag = document.createElement('link')
+    tag.setAttribute('rel', 'alternate')
+    tag.setAttribute('href', href)
+    tag.setAttribute('hreflang', locale)
+    document.head.appendChild(tag)
   })
 }
 
